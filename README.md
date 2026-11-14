@@ -56,8 +56,8 @@ Also: **English / Spanish**, **light / dark** theme, an in-app **Guide**, keyboa
 | Check | Result | Where |
 |---|---|---|
 | Sun & Earth az/el vs **JPL Horizons** (DE441, MEAN_ME), Apollo 11 + a south-polar ridge | **max error < 0.005°** | `tests/ephemeris.test.ts`, fixtures from `scripts/fetch_horizons.sh` |
-| Sun visibility vs **LOLA average-visibility map** (AVGVISIB_85S_060M, 60 random points 85.3–89.9°S, 18.6-year average) | **r = 0.97, MAE 1.2 pp** | `tests/visibility.test.ts` (needs `data-raw/`) |
-| Earth visibility vs **LOLA Earth-visibility map** (AVGVISIB_85S_060M_EARTH, same sampling) | **r = 0.97, MAE 1.8 pp** | `tests/visibility.test.ts` (needs `data-raw/`) |
+| Sun visibility vs **LOLA average-visibility map** (AVGVISIB_85S_060M, 300 random points (5 seeds × 60) 85.3–89.9°S, 18.6-year average) | **r = 0.98, MAE 1.1 pp** | `tests/visibility.test.ts` (needs `data-raw/`) |
+| Earth visibility vs **LOLA Earth-visibility map** (AVGVISIB_85S_060M_EARTH, same sampling) | **r = 0.99, MAE 1.2 pp** | `tests/visibility.test.ts` (needs `data-raw/`) |
 
 Both maps count the share of time with *any fraction* of the disc above the terrain, and that is what is compared. The Earth check validates the visibility geometry; the *link* figure in the app is stricter (whole disc plus the antenna mask) and has no reference map. The labels do not state the period the maps average over, so the test uses one 18.6-year nodal cycle.
 

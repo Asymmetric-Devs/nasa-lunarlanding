@@ -68,8 +68,9 @@ describe('visibility vs LOLA AVGVISIB_85S_060M (18.6-year average)', () => {
       const mae = mean(pts.map((p) => Math.abs(p.ref - p.mine)))
       console.log('VALIDATION', body.name, 'n', pts.length, 'corr', corr.toFixed(3), 'MAE', mae.toFixed(3), 'mean ref', mr.toFixed(3), 'mean mine', mm.toFixed(3))
       console.log(pts.slice(0, 12).map((p) => `${p.lat.toFixed(2)},${p.lon.toFixed(0)}: ref ${p.ref.toFixed(2)} mine ${p.mine.toFixed(2)}`).join('\n'))
-      // measured: Sun r 0.967, MAE 1.2 pp; Earth r 0.968, MAE 1.8 pp. A one-pixel misregistration drops r to ~0.9.
-      expect(corr).toBeGreaterThan(0.95); expect(mae).toBeLessThan(0.03)
+      // measured on 300 points (5 seeds x 60): Sun r 0.982, MAE 1.1 pp; Earth r 0.988, MAE 1.2 pp. A one-pixel misregistration drops r to ~0.9.
+      // Thresholds sit well below the pooled result but were set after seeing it, so they guard against regressions, not against a bad choice of sample.
+      expect(corr).toBeGreaterThan(0.97); expect(mae).toBeLessThan(0.02)
     }, 600000)
   }
 })

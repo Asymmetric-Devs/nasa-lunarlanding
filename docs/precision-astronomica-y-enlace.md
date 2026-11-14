@@ -77,3 +77,11 @@ Con máscara de 10° los sitios polares quedan en 0 %, porque la Tierra no sube 
 - La aberración se probó con la velocidad del centro de la Tierra, no con la de la Luna (difieren ~3 %).
 - Cuánto del error residual de 1–2 pp en la validación viene de la resolución del relieve (80 m contra 60 m del mapa de referencia) no se midió.
 - No se comparó el marco lunar IAU 2015 (el nuestro) con el marco DE421 que usaron los mapas LOLA.
+
+## 5. Verificación de la ronda 2 (macOS, rama `feat/windows-tiles-and-slope` `55b999f`)
+
+- `tsc --noEmit` limpio, 23 tests pasan y `vite build` funciona.
+- **Validación con 300 puntos** (semillas 7, 13, 29, 43, 71; `npm run test:validation` con `data-raw/`): **Sol r = 0,982, error medio 1,1 pp; Tierra r = 0,988, error medio 1,2 pp.** Las cifras anteriores (0,97 / 1,2 pp / 1,8 pp) venían de una sola semilla. Se actualizaron README, modal "Método y datos" (ES/EN) y el chip de la portada (r 0,98). Los umbrales del test pasaron de r > 0,95 y error < 3 pp a r > 0,97 y error < 2 pp; se fijaron mirando esta misma muestra, así que protegen contra regresiones, no contra una mala elección de muestra.
+- **`build_data.py` regenerado** (corrido en un directorio aparte y comparado): el núcleo de 80 m y los 7 tiles existentes salen idénticos byte a byte; se agrega `tile_im1.d8` (con el recorte de borde) y `tiles.json`; `polar240.d8` cambia solo en el anillo exterior a 75°S (r ≥ 1905 px, 0 diferencias dentro del círculo útil), que es el medio píxel que señaló Tobías. Los tres archivos están aplicados en esta rama. Con el tile, IM‑1 da 36,7 % de Sol contra 38,6 % sin él.
+- **Pendiente local** (escala de 80 m): Connecting Ridge 0,5°, Nobile Rim 2 2,9°, Haworth 8,9°, Malapert 18,3°, Cabeus 10,7°, IM‑1 13,9°, IM‑2 5,0°. Es plausible, pero a esa escala subestima la inclinación en la base de un módulo (unos metros). El texto de la interfaz ya dice que viene del relieve de 80–240 m.
+- Probado en navegador: los links a QuickMap y Moon Trek se generan con las coordenadas correctas (Connecting Ridge: x = −7054 m, y = −12244 m, que coincide con el cálculo a mano), y el aviso de máscara sale con las dos redacciones. **No abrí QuickMap ni Moon Trek** para confirmar que los parámetros de URL sigan siendo válidos; eso lo verificaron ellos.
