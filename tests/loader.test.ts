@@ -30,3 +30,15 @@ it('240 m cap and 80 m core are registered on the same pole pixel', async () => 
   // a half-pixel (120 m) offset of the cap gives ~25 m here; aligned grids give ~4 m
   expect(k).toBeGreaterThan(50000); expect(rms).toBeLessThan(8)
 })
+
+it('80 m site tile covers curated sites outside the 150 km polar core', async () => {
+  const cm = JSON.parse(readFileSync(dir + 'core80.json', 'utf8'))
+  const tm = JSON.parse(readFileSync(dir + 'tiles.json', 'utf8'))
+  const core = await loadGrid(dir.slice(0, -1), 'core80', cm, fetcher, cm.c)
+  const tile = await loadGrid(dir.slice(0, -1), 'tile_nobile-rim-2', { ...tm.tiles['nobile-rim-2'], nodata: -32768 }, fetcher, tm.center)
+  expect(tile.res_m).toBe(80)
+  expect(new Terrain(core).height(-84.202, 60.7)).toBeNull()
+  const t = new Terrain(tile, core)
+  expect(t.layers[0]).toBe(tile)
+  expect(t.height(-84.202, 60.7)).not.toBeNull()
+})

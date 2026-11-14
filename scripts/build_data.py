@@ -66,8 +66,9 @@ half = 150  # samples -> 300x300 @ 80 m = 24 km
 for s in sites:
     if s["lat"] > -80: continue
     cx, cy = site_px(s["lat"], s["lon"], 0.08, cb)
-    x0, y0 = int(round(cx)) - half, int(round(cy)) - half
-    if x0 < 0 or y0 < 0 or x0 + 2 * half > nb or y0 + 2 * half > nb: print("skip", s["id"]); continue
+    if not (0 <= cx < nb and 0 <= cy < nb): print("skip", s["id"]); continue
+    x0 = max(0, min(nb - 2 * half, int(round(cx)) - half))
+    y0 = max(0, min(nb - 2 * half, int(round(cy)) - half))
     t = np.round(b[y0:y0 + 2 * half, x0:x0 + 2 * half] * 1000).astype('<i2')
     encode_delta(t).tofile(f"{proj}/public/data/tile_{s['id']}.d8")
     tiles[s["id"]] = {"n": 2 * half, "res_m": 80, "x0": x0, "y0": y0, "q": Q, "enc": "d8"}
