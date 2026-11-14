@@ -92,4 +92,10 @@ export const en = {
   'about.ter.v': 'Validation: yearly Sun visibility versus the LOLA average-illumination map (AVGVISIB_85S_060M), 60 random points from 85.3°S to 89.9°S, 2009–2013: correlation 0.92, mean absolute error 2.2 percentage points.',
   'about.lim.h': 'Limits you should know', 'about.lim.p': 'Terrain exists for 75°S–90°S only; elsewhere the horizon is a bare sphere. Results depend on DEM resolution, mast height and the exact coordinate: a few tens of metres can change them, which is part of the point. Sites marked “~” are region centres, not final selections. The hero image is an illustration. This is a planning aid, not flight-certified.',
   'about.src.h': 'Sources', 'about.src.p': 'NASA LRO/LOLA (PDS Geosciences), NASA SVS CGI Moon Kit, NASA Blue Marble, JPL Horizons, Astronomy Engine, IAU WGCCRE reports. “Sunlit” means any part of the solar disc is visible; “link” means the whole Earth disc clears the terrain plus your antenna mask.',
+  'about.go.h': 'Go deeper: official tools', 'about.go.p': 'Sunline is for fast comparison. When a site looks promising, check it in the tools NASA and partner agencies provide:',
+  'about.go.quickmap': 'Quickmap (ASU / LRO)', 'about.go.quickmap.d': 'High-resolution LRO imagery and topography; best for studying the complex terrain of the south pole.',
+  'about.go.trek': 'Moon Trek (NASA)', 'about.go.trek.d': 'Interactive 3D lunar surface to see how local terrain shapes the horizon.',
+  'about.go.horizons': 'Horizons (JPL)', 'about.go.horizons.d': 'The reference ephemeris. Sunline’s Sun and Earth directions are checked against it (under 0.005°).',
+  'about.go.csa': 'Moon Exploration (CSA)', 'about.go.csa.d': 'Canada’s portal: Artemis, Gateway, Canadarm3 and Canadian lunar rovers.',
+  'about.go.note': 'Context from CSA: the lunar night lasts about two weeks, with temperatures down to −200 °C. That is why surviving it, or hibernating through it, matters for a polar mission. Artemis dates on CSA’s pages are targets and can change.',
 } as const
