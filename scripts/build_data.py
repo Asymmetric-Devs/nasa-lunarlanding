@@ -30,7 +30,7 @@ R = 1737.4
 
 # ---- 240 m cap 75S..90S, int16 metres (relative to 1737.4 km sphere) ----
 a = np.fromfile(f"{raw}/dem75s240/ldem_75s_240m_float.img", dtype='<f4').reshape(3812, 3812)
-n = 3812; c = 1905.5 - 0.5  # pixel-centre index of the pole (0-based)
+n = 3812; c = 1905.5  # 0-based index of the pole = LINE/SAMPLE_PROJECTION_OFFSET of the label = (n - 1) / 2
 yy, xx = np.mgrid[0:n, 0:n]
 rho_px = np.hypot(xx - c, yy - c)
 rmax = 2 * R * math.tan(math.radians(7.5)) / 0.24  # 75S circle

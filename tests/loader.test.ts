@@ -14,3 +14,18 @@ it('decodes delta terrain within quantisation error of the source DEM', async ()
   expect(Math.abs(conn! - 1652)).toBeLessThan(40); expect(mal!).toBeGreaterThan(3500); expect(hw!).toBeLessThan(-2500)
   expect(t.height(-70, 0)).toBeNull()
 })
+
+it('240 m cap and 80 m core are registered on the same pole pixel', async () => {
+  const cm = JSON.parse(readFileSync(dir + 'core80.json', 'utf8')), pm = JSON.parse(readFileSync(dir + 'polar240.json', 'utf8'))
+  const core = new Terrain(await loadGrid(dir.slice(0, -1), 'core80', cm, fetcher, cm.c))
+  const cap = new Terrain(await loadGrid(dir.slice(0, -1), 'polar240', pm, fetcher, pm.center, 457.4))
+  let sum = 0, k = 0
+  for (let y = -140; y <= 140; y += 0.9) for (let x = -140; x <= 140; x += 0.9) {
+    const a = core.heightXY(x, y), b = cap.heightXY(x, y); if (a === null || b === null) continue
+    sum += (a - b) ** 2; k++
+  }
+  const rms = Math.sqrt(sum / k)
+  console.log('cap vs core RMS m', rms.toFixed(2), 'n', k)
+  // a half-pixel (120 m) offset of the cap gives ~25 m here; aligned grids give ~4 m
+  expect(k).toBeGreaterThan(50000); expect(rms).toBeLessThan(8)
+})
