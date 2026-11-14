@@ -43,7 +43,7 @@ json.dump({"n": n, "res_m": 240, "center": c, "radius_km": R, "units": "m", "nod
            "extent_latmax": -75}, open(f"{proj}/public/data/polar240.json", "w"))
 print("240m ok", h.shape, (h == -32768).mean())
 
-# ---- 80 m polar core, radius 150 km (to ~88.6S) ----
+# ---- 80 m polar core, 300 km square: 150 km half-width, reaching ~85.05S along the axes ----
 b0 = np.fromfile(f"{raw}/dem80s80/ldem_80s_80m_float.img", dtype='<f4')
 nb0 = int(math.isqrt(b0.size)); b0 = b0.reshape(nb0, nb0); cc0 = (nb0 - 1) / 2
 hw = int(150 / 0.08)
