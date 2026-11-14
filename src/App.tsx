@@ -75,7 +75,7 @@ function Navigator() {
         <div className="tl-wrap">{res && <Timeline res={res} cursorH={cursorH} onCursor={setCursor} />}</div>
       </main>
       <aside className="side">
-        {res && now && <><Verdict m={res.analysis.metrics} req={req} /><Readouts res={res} now={now} cursorH={cursorH} /></>}
+        {res && now && <><Verdict m={res.analysis.metrics} req={req} hor={res.hor} /><Readouts res={res} now={now} cursorH={cursorH} /></>}
         <Settings />
       </aside>
     </div>

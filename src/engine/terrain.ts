@@ -41,6 +41,21 @@ export class Terrain {
     }
     return null
   }
+  /** Local terrain slope (deg, 0 = flat) from central differences across 1 grid cell of the finest layer covering (lat, lon). */
+  slope(lat: number, lon: number): number | null {
+    if (lat > -75) return null
+    for (const g of this.layers) {
+      const p = polarPixel(lat, lon, g.res_m, g.c)
+      const h0 = bilinear(g, p.col, p.row)
+      if (h0 === null) continue
+      const hl = bilinear(g, p.col - 0.5, p.row), hr = bilinear(g, p.col + 0.5, p.row)
+      const hu = bilinear(g, p.col, p.row - 0.5), hd = bilinear(g, p.col, p.row + 0.5)
+      const hx = hl !== null && hr !== null ? hr - hl : hr !== null ? (hr - h0) * 2 : hl !== null ? (h0 - hl) * 2 : 0
+      const hy = hu !== null && hd !== null ? hd - hu : hd !== null ? (hd - h0) * 2 : hu !== null ? (h0 - hu) * 2 : 0
+      return Math.atan(Math.hypot(hx, hy) / g.res_m) * R2D
+    }
+    return null
+  }
 }
 
 /** Destination point on the sphere from (lat,lon), azimuth, central angle. */
@@ -57,6 +72,7 @@ export interface Horizon {
   /** distance (km) to the limiting point */
   dist: Float32Array
   siteHeightM: number
+  siteSlopeDeg: number | null
   hasTerrain: boolean
 }
 
@@ -88,7 +104,7 @@ export function computeHorizon(terrain: Terrain, lat: number, lon: number, maxKm
     }
     el[az] = best; dist[az] = bestD
   }
-  return { el, dist, siteHeightM: base, hasTerrain }
+  return { el, dist, siteHeightM: base, siteSlopeDeg: terrain.slope(lat, lon), hasTerrain }
 }
 
 export function horizonAt(h: Horizon, az: number) {

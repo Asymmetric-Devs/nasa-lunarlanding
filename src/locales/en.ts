@@ -48,6 +48,7 @@ export const en = {
   'v.comms.tip': 'Share of the time the whole Earth disc clears the terrain and your antenna mask, so no relay satellite is needed.',
   'v.sunlit': '{n}% sunlit', 'v.longest': '{d} longest dark', 'v.link': '{n}% link',
   'v.power.sub': 'Mean panel output {out}% · peak Sun {peak}° · needs ≥ {min}%', 'v.dark.sub': '{n} dark period(s) · limit {lim}', 'v.comms.sub': 'Longest outage {out} · {w} window(s) · needs ≥ {min}%',
+  'v.slope': 'Local slope {s}° · elevation {h} m', 'v.slope.steep': ' · steep (>10°)',
   // readouts
   'ro.elev': 'elevation', 'ro.az': 'Azimuth', 'ro.hor': 'Terrain horizon there', 'ro.hor.tip': 'How high the skyline is in the direction of this body. The body must be above this to be seen.',
   'ro.disc': '{n}% of disc visible', 'ro.hidden': 'below terrain', 'ro.sunset': 'Sunset in', 'ro.sunrise': 'Sunrise in',
@@ -62,6 +63,7 @@ export const en = {
   'cmp.empty.h': 'Only one scenario so far.', 'cmp.empty.p': 'Add sites with the + button in the Navigator list, or duplicate this one with a later date.', 'cmp.empty.go': 'Go to Navigator',
   'cmp.open': 'Open in Navigator', 'cmp.remove': 'Remove', 'cmp.sunlit': 'Sunlit time', 'cmp.power': 'Mean panel output', 'cmp.power.tip': 'Average output of your chosen array type, as a share of full sunshine.', 'cmp.peak': 'Peak Sun elevation',
   'cmp.dark': 'Longest darkness', 'cmp.periods': 'Dark periods', 'cmp.link': 'Earth link', 'cmp.outage': 'Longest comm outage', 'cmp.both': 'Sun and Earth together', 'cmp.both.tip': 'Time with both power and a direct link: when operations are possible.',
+  'cmp.slope': 'Terrain slope', 'cmp.slope.tip': 'Local ground tilt from the 80–240 m LOLA DEM. Landers typically need under 10°.',
   'cmp.tip': 'You can add {n} more scenarios.', 'cmp.dup': 'Duplicate active, +1 month',
   'sens.eyebrow': 'Why small moves matter', 'sens.title': 'A few metres can change everything', 'sens.sub': 'Sunlit time of {n} if the lander touches down off target.', 'sens.offset': 'Offset', 'sens.dark': 'dark', 'sens.loading': 'Computing 9 horizons…',
   'sens.msg': 'Within ±{s} m the Sun reaches the lander {a}–{b}% of the time.', 'sens.risk': 'A landing ellipse that size is a real scheduling risk.', 'sens.ok': 'This spot is forgiving.',

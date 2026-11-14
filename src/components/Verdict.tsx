@@ -1,4 +1,5 @@
 import type { Metrics } from '../engine/analysis'
+import type { Horizon } from '../engine/terrain'
 import { fmtDur } from '../lib/format'
 import { useT, type Key } from '../i18n'
 import type { Requirements } from '../store'
@@ -28,7 +29,7 @@ function Row({ label, tip, value, sub, g, frac }: { label: string; tip: string; 
   )
 }
 
-export function Verdict({ m, req }: { m: Metrics; req: Requirements }) {
+export function Verdict({ m, req, hor }: { m: Metrics; req: Requirements; hor?: Horizon }) {
   const t = useT()
   const g = grade(m, req)
   const weakest: Key | null = g.overall === 'go' ? null : g.dark === 'no' || (g.dark === 'marginal' && g.power === 'go' && g.comms === 'go') ? 'v.dark' : g.power !== 'go' && (g.comms === 'go' || g.power === 'no') ? 'v.power' : g.comms !== 'go' ? 'v.comms' : 'v.power'
@@ -37,6 +38,9 @@ export function Verdict({ m, req }: { m: Metrics; req: Requirements }) {
       <div className={`verdict-head ${g.overall}`}>
         <div><span className="lbl">{t('v.title')}</span><strong>{t(GRADE_KEY[g.overall])}</strong></div>
         <p>{weakest ? t('v.weak', { x: t(weakest) }) : t('v.allgood')}</p>
+        {hor?.hasTerrain && hor.siteSlopeDeg !== null && (
+          <p className="mono">{t('v.slope', { s: hor.siteSlopeDeg.toFixed(1), h: Math.round(hor.siteHeightM) })}{hor.siteSlopeDeg > 10 ? t('v.slope.steep') : ''}</p>
+        )}
       </div>
       <Row label={t('v.power')} tip={t('v.power.tip')} value={t('v.sunlit', { n: m.sunlitPct.toFixed(0) })} g={g.power} frac={m.sunlitPct / 100}
         sub={t('v.power.sub', { out: m.meanPowerPct.toFixed(0), peak: m.peakSunEl.toFixed(1), min: req.minSunPct })} />

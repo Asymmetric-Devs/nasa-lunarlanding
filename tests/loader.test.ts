@@ -2,7 +2,7 @@ import { it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { loadGrid } from '../src/engine/loader'
-import { Terrain } from '../src/engine/terrain'
+import { Terrain, computeHorizon } from '../src/engine/terrain'
 const dir = fileURLToPath(new URL('../public/data/', import.meta.url)).replace(/\\/g, '/')
 const fetcher = async (u: string) => { const b = readFileSync(u); return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer }
 it('decodes delta terrain within quantisation error of the source DEM', async () => {
@@ -41,4 +41,22 @@ it('80 m site tile covers curated sites outside the 150 km polar core', async ()
   const t = new Terrain(tile, core)
   expect(t.layers[0]).toBe(tile)
   expect(t.height(-84.202, 60.7)).not.toBeNull()
+})
+
+it('computes local terrain slope in degrees and exposes siteSlopeDeg on Horizon', async () => {
+  const cm = JSON.parse(readFileSync(dir + 'core80.json', 'utf8')), pm = JSON.parse(readFileSync(dir + 'polar240.json', 'utf8'))
+  const core = await loadGrid(dir.slice(0, -1), 'core80', cm, fetcher, cm.c)
+  const cap = await loadGrid(dir.slice(0, -1), 'polar240', pm, fetcher, pm.center, 457.4)
+  const t = new Terrain(core, cap)
+  const sRidge = t.slope(-89.534, 209.948)
+  const sMal = t.slope(-85.9, 0)
+  expect(sRidge).not.toBeNull()
+  expect(sMal).not.toBeNull()
+  expect(sRidge!).toBeGreaterThanOrEqual(0)
+  expect(sRidge!).toBeLessThan(45)
+  expect(sMal!).toBeGreaterThanOrEqual(0)
+  expect(sMal!).toBeLessThan(45)
+  expect(t.slope(-70, 0)).toBeNull()
+  const hor = computeHorizon(t, -89.534, 209.948, 50)
+  expect(hor.siteSlopeDeg).toBe(sRidge)
 })
