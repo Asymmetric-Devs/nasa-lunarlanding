@@ -1,0 +1,1 @@
+{"n": 3812, "res_m": 240, "center": 1905.0, "radius_km": 1737.4, "units": "m", "nodata": -32768, "q": 4, "enc": "d8", "proj": "south polar stereographic, x=rho*sin(lon), y=-rho*cos(lon) (row down)", "extent_latmax": -75}
