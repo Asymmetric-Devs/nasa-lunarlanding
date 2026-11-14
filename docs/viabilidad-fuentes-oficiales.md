@@ -2,6 +2,8 @@
 
 Fecha del análisis: 14 de noviembre de 2026. Todo lo de abajo se probó con peticiones reales ese día, salvo lo marcado como **no verificado**.
 
+> **Revisión posterior (mismo día).** Las cifras de validación de este documento (Tierra r = 0,894; Sol r = 0,92) salieron de leer los mapas LOLA corridos un píxel. Corregido eso, dan **r = 0,97** para ambos. Los dos puntos con diferencia grande y la duda del período quedaron resueltos; ver la sección 6. El resto del análisis (Trek, Horizons, Quickmap, CSA) no cambia.
+
 ## Resumen
 
 | Fuente | ¿Tiene API usable? | ¿Se puede llamar desde el navegador? | Veredicto |
@@ -81,4 +83,25 @@ Idea fuera de las fuentes externas: Trek publica capas de **pendiente**, pero so
 
 ## Archivos del experimento
 
-- `tests/earth-experiment.test.ts`: la prueba de validación de la Tierra. Es una copia de `tests/illumination.test.ts` con el mapa de la Tierra. Está sin commitear.
+- `tests/visibility.test.ts`: valida el Sol y la Tierra con una sola prueba parametrizada. Reemplaza a `tests/illumination.test.ts` y a `tests/earth-experiment.test.ts`, que era su copia.
+- `scripts/fetch_validation_data.sh`: baja los archivos públicos de LOLA (unos 220 MB) a `data-raw/`.
+- `npm run test:validation`: corre la validación y falla si faltan los datos, en lugar de saltearla.
+
+## 6. Revisión: qué cambió después de este análisis
+
+**Error de un píxel al leer los mapas LOLA.** La etiqueta da `LINE_PROJECTION_OFFSET = 2528.5`, que ya es el índice del polo contando desde 0. Las pruebas usaban 2527,5, así que leían cada valor de referencia 60 m corrido en cada eje.
+
+| | Antes | Píxel corregido | Además, promedio de 18,6 años |
+|---|---|---|---|
+| Tierra | r = 0,894, error medio 3,6 pp | r = 0,966, 2,4 pp | r = 0,968, 1,8 pp |
+| Sol | r = 0,921, error medio 2,2 pp | r = 0,966, 1,3 pp | r = 0,967, 1,2 pp |
+
+**Los dos puntos con diferencia grande** eran ese error: en −86,81° / 271° la referencia pasa de 0,07 a 0,47 (nuestro cálculo: 0,45), y en −88,77° / 195° pasa de 0,15 a 0,00 (nuestro: 0,03).
+
+**Período del mapa.** La etiqueta no dice qué período se simuló. Las fechas 2009–2013 son `START_TIME`/`STOP_TIME`, y la etiqueta del relieve empieza en el mismo instante, así que corresponden a las mediciones del altímetro. La prueba ahora promedia un ciclo nodal de 18,6 años; el ajuste mejora un poco, lo que es consistente con la descripción de Trek sin llegar a probarla.
+
+**El mismo tipo de error estaba en la app.** El relieve de 240 m tenía el polo en 1905,0 en vez de 1905,5: medio píxel, 120 m en cada eje. Contra el relieve de 80 m, la diferencia baja de 24,6 m RMS a 3,3 m al corregirlo. **No medido:** cuánto cambian los porcentajes de los sitios que dependen de esa capa.
+
+**Alcance de lo validado.** Los mapas cuentan "cualquier fracción del disco visible". Eso valida la geometría de visibilidad de la Tierra, no el criterio de enlace de la app (disco entero más la máscara de antena), que no tiene mapa de referencia.
+
+**Sigue sin verificar:** términos de uso y límites de Trek, y la alineación de sus tiles con nuestra grilla. Después de este error de registro en datos propios, esa comprobación es obligatoria antes de mostrar un overlay.
