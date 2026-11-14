@@ -43,6 +43,8 @@ export const es: Record<keyof typeof en, string> = {
   'v.comms.tip': 'Porcentaje del tiempo en que todo el disco de la Tierra supera el terreno y tu máscara de antena, sin necesitar satélite relé.',
   'v.sunlit': '{n}% con Sol', 'v.longest': '{d} de oscuridad máx.', 'v.link': '{n}% de enlace',
   'v.power.sub': 'Salida media del panel {out}% · Sol máx. {peak}° · necesita ≥ {min}%', 'v.dark.sub': '{n} período(s) oscuro(s) · límite {lim}', 'v.comms.sub': 'Corte más largo {out} · {w} ventana(s) · necesita ≥ {min}%',
+  'v.comms.maskwarn': 'La máscara de antena ({mask}°) supera la elevación máxima de la Tierra acá ({max}°) — el enlace directo queda en 0%.',
+  'v.comms.masknear': 'La máscara de antena ({mask}°) se acerca a la elevación máxima de la Tierra acá ({max}°), reduciendo el enlace.',
   'v.slope': 'Pendiente local {s}° · elevación {h} m', 'v.slope.steep': ' · empinado (>10°)',
   'ro.elev': 'de elevación', 'ro.az': 'Acimut', 'ro.hor': 'Horizonte de terreno ahí', 'ro.hor.tip': 'Qué tan alta está la línea del cielo en la dirección de este astro. Debe estar por encima para verse.',
   'ro.disc': '{n}% del disco visible', 'ro.hidden': 'bajo el terreno', 'ro.sunset': 'Puesta de Sol en', 'ro.sunrise': 'Salida del Sol en',

@@ -139,6 +139,7 @@ h1, h2, h3, h4, p, ol, ul, dl, dd, figure { margin: 0; padding: 0; }
 .vrow-top { display: flex; justify-content: space-between; align-items: center; }
 .vrow-val { font-size: 17px; font-weight: 500; letter-spacing: -.02em; }
 .sub { color: var(--muted); font-size: 11.5px; line-height: 1.4; }
+.v-warn { color: var(--marg); font-size: 11.5px; line-height: 1.4; padding: 5px 8px; border-left: 2px solid var(--marg); background: color-mix(in srgb, var(--marg) 10%, transparent); }
 .meter { height: 4px; background: var(--trackbg); border-radius: 4px; overflow: hidden; }
 .meter i { display: block; height: 100%; border-radius: 4px; } .meter i.go { background: var(--go); } .meter i.marginal { background: var(--marg); } .meter i.no { background: var(--no); }
 .readouts { display: grid; gap: 10px; }

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { sunCoveredByEarth, angularSeparation } from '../src/engine/eclipse'
 import { skyState, type SkyState } from '../src/engine/ephemeris'
-import { sampleAt, type Config } from '../src/engine/analysis'
+import { sampleAt, analyze, type Config, type Series } from '../src/engine/analysis'
 import type { Horizon } from '../src/engine/terrain'
 
 const flat = (deg: number): Horizon => ({ el: new Float32Array(360).fill(deg), dist: new Float32Array(360).fill(1), siteHeightM: 0, siteSlopeDeg: 0, hasTerrain: true })
@@ -60,5 +60,14 @@ describe('Earth link: the antenna mask is an elevation above the local horizonta
   it('terrain that covers part of the Earth disc still blocks it', () => {
     expect(sampleAt(sky, 0, 0, flat(6.5), cfg(0)).earthLink).toBe(false)
     expect(sampleAt(sky, 0, 0, flat(6.5), cfg(0)).earthFrac).toBeLessThan(0.999)
+  })
+  it('analyze reports peakEarthEl and drops linkPct to 0 when minEarthEl exceeds it', () => {
+    const series: Series = { t0: 0, stepMs: 3600e3, n: 2, sky: [sky, sky] }
+    const lowMask = analyze(series, 0, 0, flat(0), cfg(5))
+    expect(lowMask.metrics.peakEarthEl).toBeGreaterThan(6.5)
+    expect(lowMask.metrics.peakEarthEl).toBeLessThan(7.1)
+    expect(lowMask.metrics.linkPct).toBe(100)
+    const highMask = analyze(series, 0, 0, flat(0), cfg(10))
+    expect(highMask.metrics.linkPct).toBe(0)
   })
 })

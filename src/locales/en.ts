@@ -48,6 +48,8 @@ export const en = {
   'v.comms.tip': 'Share of the time the whole Earth disc clears the terrain and your antenna mask, so no relay satellite is needed.',
   'v.sunlit': '{n}% sunlit', 'v.longest': '{d} longest dark', 'v.link': '{n}% link',
   'v.power.sub': 'Mean panel output {out}% · peak Sun {peak}° · needs ≥ {min}%', 'v.dark.sub': '{n} dark period(s) · limit {lim}', 'v.comms.sub': 'Longest outage {out} · {w} window(s) · needs ≥ {min}%',
+  'v.comms.maskwarn': 'Antenna mask ({mask}°) exceeds peak Earth elevation here ({max}°) — direct link is 0%.',
+  'v.comms.masknear': 'Antenna mask ({mask}°) is near peak Earth elevation here ({max}°), cutting link time.',
   'v.slope': 'Local slope {s}° · elevation {h} m', 'v.slope.steep': ' · steep (>10°)',
   // readouts
   'ro.elev': 'elevation', 'ro.az': 'Azimuth', 'ro.hor': 'Terrain horizon there', 'ro.hor.tip': 'How high the skyline is in the direction of this body. The body must be above this to be seen.',

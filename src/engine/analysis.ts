@@ -57,7 +57,7 @@ export function sampleAt(sky: SkyState, lat: number, lon: number, hor: Horizon, 
 export interface Interval { start: number; end: number }
 export interface Metrics {
   spanH: number
-  sunlitPct: number; meanPowerPct: number; peakSunEl: number; meanSunEl: number
+  sunlitPct: number; meanPowerPct: number; peakSunEl: number; meanSunEl: number; peakEarthEl: number
   longestDarkH: number; darkPeriods: number; longestLightH: number
   linkPct: number; longestOutageH: number; linkWindows: Interval[]
   bothPct: number // sun AND earth link simultaneously
@@ -79,11 +79,11 @@ export interface Analysis { samples: Sample[]; metrics: Metrics; t0: number; ste
 export function analyze(series: Series, lat: number, lon: number, hor: Horizon, cfg: Config): Analysis {
   const n = series.n, samples: Sample[] = new Array(n)
   const sun = new Uint8Array(n), link = new Uint8Array(n), both = new Uint8Array(n)
-  let pw = 0, sl = 0, lk = 0, bt = 0, peak = -90, selSum = 0
+  let pw = 0, sl = 0, lk = 0, bt = 0, peak = -90, peakEarth = -90, selSum = 0
   for (let i = 0; i < n; i++) {
     const s = sampleAt(series.sky[i], lat, lon, hor, cfg); samples[i] = s
     sun[i] = s.sunlit ? 1 : 0; link[i] = s.earthLink ? 1 : 0; both[i] = sun[i] & link[i]
-    pw += s.power; sl += sun[i]; lk += link[i]; bt += both[i]; if (s.sunEl > peak) peak = s.sunEl; selSum += s.sunEl
+    pw += s.power; sl += sun[i]; lk += link[i]; bt += both[i]; if (s.sunEl > peak) peak = s.sunEl; if (s.earthEl > peakEarth) peakEarth = s.earthEl; selSum += s.sunEl
   }
   const dark = intervals(sun, series.t0, series.stepMs, 0), light = intervals(sun, series.t0, series.stepMs, 1)
   const outages = intervals(link, series.t0, series.stepMs, 0), windows = intervals(link, series.t0, series.stepMs, 1)
@@ -92,7 +92,7 @@ export function analyze(series: Series, lat: number, lon: number, hor: Horizon, 
     samples, t0: series.t0, stepMs: series.stepMs,
     metrics: {
       spanH: (n * series.stepMs) / 3.6e6, sunlitPct: (100 * sl) / n, meanPowerPct: (100 * pw) / n,
-      peakSunEl: peak, meanSunEl: selSum / n,
+      peakSunEl: peak, meanSunEl: selSum / n, peakEarthEl: peakEarth,
       longestDarkH: maxLen(dark), darkPeriods: dark.length, longestLightH: maxLen(light),
       linkPct: (100 * lk) / n, longestOutageH: maxLen(outages), linkWindows: windows, bothPct: (100 * bt) / n,
       darkIntervals: dark, lightIntervals: light,
