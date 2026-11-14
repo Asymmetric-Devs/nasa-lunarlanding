@@ -1,9 +1,10 @@
 import { it, expect } from 'vitest'
 import { readFileSync, readdirSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { en } from '../src/locales/en'
 import { es } from '../src/locales/es'
 
-const dir = new URL('../src/', import.meta.url).pathname
+const dir = fileURLToPath(new URL('../src/', import.meta.url)).replace(/\\/g, '/')
 const files: string[] = []
 const walk = (d: string) => { for (const e of readdirSync(d, { withFileTypes: true })) { const p = d + e.name; if (e.isDirectory()) walk(p + '/'); else if (/\.(tsx?)$/.test(e.name) && !p.includes('/locales/')) files.push(p) } }
 walk(dir)

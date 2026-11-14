@@ -1,8 +1,9 @@
 import { it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { loadGrid } from '../src/engine/loader'
 import { Terrain } from '../src/engine/terrain'
-const dir = new URL('../public/data/', import.meta.url).pathname
+const dir = fileURLToPath(new URL('../public/data/', import.meta.url)).replace(/\\/g, '/')
 const fetcher = async (u: string) => { const b = readFileSync(u); return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer }
 it('decodes delta terrain within quantisation error of the source DEM', async () => {
   const cm = JSON.parse(readFileSync(dir + 'core80.json', 'utf8')), pm = JSON.parse(readFileSync(dir + 'polar240.json', 'utf8'))
