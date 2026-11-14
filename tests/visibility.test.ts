@@ -44,17 +44,22 @@ describe('visibility vs LOLA AVGVISIB_85S_060M (18.6-year average)', () => {
       const v = readFileSync(new URL(body.file, raw))
       const map = new Int16Array(v.buffer, v.byteOffset, v.byteLength / 2)
       const series = buildSeries(T0, STEP_MS, N_STEPS)
-      let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647
+      const SEEDS = [7, 13, 29, 43, 71], PER_SEED = 60
       const pts: { lat: number; lon: number; ref: number; mine: number }[] = []
-      while (pts.length < 60) {
-        const lat = -(85.3 + rnd() * 4.6), lon = rnd() * 360
-        const p = polarPixel(lat, lon, 60, MAP_C); const ref = map[Math.round(p.row) * MAP_N + Math.round(p.col)] * DN_SCALE
-        if (pts.length % 2 === 0 && !(ref > 0.02)) continue // every other point must have some visibility
-        const hor = computeHorizon(terrain, lat, lon, 150)
-        if (!hor.hasTerrain) continue
-        const a = analyze(series, lat, lon, hor, { minEarthEl: 0, panel: 'vertical', mastM: 0 })
-        const seen = body.name === 'Sun' ? a.samples.filter((x) => x.sunFrac > 0) : a.samples.filter((x) => x.earthFrac > 0)
-        pts.push({ lat, lon, ref, mine: seen.length / a.samples.length })
+      for (const s0 of SEEDS) {
+        let seed = s0, count = 0
+        const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647
+        while (count < PER_SEED) {
+          const lat = -(85.3 + rnd() * 4.6), lon = rnd() * 360
+          const p = polarPixel(lat, lon, 60, MAP_C); const ref = map[Math.round(p.row) * MAP_N + Math.round(p.col)] * DN_SCALE
+          if (count % 2 === 0 && !(ref > 0.02)) continue // every other point must have some visibility
+          const hor = computeHorizon(terrain, lat, lon, 150)
+          if (!hor.hasTerrain) continue
+          const a = analyze(series, lat, lon, hor, { minEarthEl: 0, panel: 'vertical', mastM: 0 })
+          const seen = body.name === 'Sun' ? a.samples.filter((x) => x.sunFrac > 0) : a.samples.filter((x) => x.earthFrac > 0)
+          pts.push({ lat, lon, ref, mine: seen.length / a.samples.length })
+          count++
+        }
       }
       const mean = (a: number[]) => a.reduce((x, y) => x + y) / a.length
       const mr = mean(pts.map((p) => p.ref)), mm = mean(pts.map((p) => p.mine))
