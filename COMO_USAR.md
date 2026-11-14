@@ -24,7 +24,7 @@ La barra de arriba tiene **EN / ES**, el botón **claro / oscuro**, la **Guía**
 
 ## Guion de 3 minutos para la presentación
 
-*Portada* (el Sol girando al polo) → *Navigator* en Connecting Ridge, leer veredicto y horizonte → *Superficie 3D* → *Comparar* con Malapert y el panel de desplazamiento → *Planificador*: “se atrasó el lanzamiento, ¿qué fechas sirven?” → *Método y datos* (validado contra JPL Horizons < 0.005° y contra los mapas de LOLA, r = 0.92).
+*Portada* (el Sol girando al polo) → *Navigator* en Connecting Ridge, leer veredicto y horizonte → *Superficie 3D* → *Comparar* con Malapert y el panel de desplazamiento → *Planificador*: “se atrasó el lanzamiento, ¿qué fechas sirven?” → *Método y datos* (validado contra JPL Horizons < 0.005° y contra los mapas de LOLA de visibilidad del Sol y de la Tierra, r = 0.97).
 
 ## Cosas que hay que decir con honestidad
 
@@ -39,6 +39,7 @@ La barra de arriba tiene **EN / ES**, el botón **claro / oscuro**, la **Guía**
 cd lunar-landing-site-navigator
 npm install
 npm run dev      # http://localhost:5173
-npm test         # validaciones (Horizons, terreno, iluminación LOLA, traducciones)
+npm test         # validaciones (Horizons, terreno, traducciones; LOLA solo si existe data-raw/)
+scripts/fetch_validation_data.sh && npm run test:validation   # validación LOLA del Sol y la Tierra (~220 MB)
 npm run build    # sitio estático en dist/
 ```
