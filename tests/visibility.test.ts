@@ -8,6 +8,7 @@ import { buildSeries, analyze } from '../src/engine/analysis'
 const raw = new URL('../data-raw/', import.meta.url)
 const MAP_N = 5058, MAP_C = 2528.5 // LINES and LINE/SAMPLE_PROJECTION_OFFSET of the labels (0-based pole index)
 const DN_SCALE = 0.00004
+const STRICT = !!process.env.REQUIRE_VALIDATION_DATA // npm run test:validation: missing data is a failure, not a skip
 const bodies = [
   { name: 'Sun', file: 'illum85/AVGVISIB_85S_060M_201608.IMG' },
   { name: 'Earth', file: 'illum85/AVGVISIB_85S_060M_201608_EARTH.IMG' },
@@ -37,6 +38,7 @@ const T0 = Date.UTC(2009, 6, 13, 17), STEP_MS = 4 * 3600e3, N_STEPS = Math.floor
 describe('visibility vs LOLA AVGVISIB_85S_060M (18.6-year average)', () => {
   for (const body of bodies) {
     const have = existsSync(new URL(body.file, raw))
+    if (!have && STRICT) { it(body.name, () => { throw new Error(`missing data-raw/${body.file}: run scripts/fetch_validation_data.sh`) }); continue }
     it.skipIf(!have)(body.name, () => {
       const terrain = loadTerrain()
       const v = readFileSync(new URL(body.file, raw))
