@@ -13,11 +13,19 @@ const bodies = [
   { name: 'Earth', file: 'illum85/AVGVISIB_85S_060M_201608_EARTH.IMG' },
 ] as const
 
+/** 80 m polar DEM as int16 metres: the public int16 product (scripts/fetch_validation_data.sh) or the float one used by build_data.py. */
 function loadTerrain() {
-  const f = readFileSync(new URL('dem80s80/ldem_80s_80m_float.img', raw))
-  const km = new Float32Array(f.buffer, f.byteOffset, f.byteLength / 4)
-  const d16 = new Int16Array(km.length); for (let i = 0; i < km.length; i++) d16[i] = Number.isFinite(km[i]) ? Math.round(km[i] * 1000) : -32768
-  const n = Math.round(Math.sqrt(km.length))
+  const pub = new URL('dem80s80/LDEM_80S_80M.IMG', raw)
+  let d16: Int16Array
+  if (existsSync(pub)) {
+    const f = readFileSync(pub); const dn = new Int16Array(f.buffer, f.byteOffset, f.byteLength / 2)
+    d16 = new Int16Array(dn.length); for (let i = 0; i < dn.length; i++) d16[i] = Math.round(dn[i] * 0.5) // label: HEIGHT = DN * 0.5 m
+  } else {
+    const f = readFileSync(new URL('dem80s80/ldem_80s_80m_float.img', raw))
+    const km = new Float32Array(f.buffer, f.byteOffset, f.byteLength / 4)
+    d16 = new Int16Array(km.length); for (let i = 0; i < km.length; i++) d16[i] = Number.isFinite(km[i]) ? Math.round(km[i] * 1000) : -32768
+  }
+  const n = Math.round(Math.sqrt(d16.length))
   return new Terrain({ data: d16, n, res_m: 80, c: (n - 1) / 2, nodata: -32768 })
 }
 
