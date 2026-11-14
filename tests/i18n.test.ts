@@ -14,7 +14,7 @@ it('EN and ES define exactly the same keys', () => {
 })
 it('every key used in source exists, and no translation is empty', () => {
   const used = new Set<string>()
-  for (const f of files) { const s = readFileSync(f, 'utf8'); for (const m of s.matchAll(/\bt\(\s*['"]([\w.]+)['"]/g)) used.add(m[1]); for (const m of s.matchAll(/['"]((?:guide|g|grp|set|span|cmp|pl|v|ro|rail|date|tl|map|surf|intro|about|hint|nav|tab|grade|sens|pano)\.[\w.]+)['"]/g)) used.add(m[1]) }
+  for (const f of files) { const s = readFileSync(f, 'utf8'); for (const m of s.matchAll(/\bt\(\s*['"]([\w.]+)['"]/g)) used.add(m[1]); for (const m of s.matchAll(/['"]((?:guide|g|grp|set|span|cmp|pl|v|ro|rail|date|tl|map|surf|intro|about|hint|nav|tab|grade|sens|pano|ext)\.[\w.]+)['"]/g)) used.add(m[1]) }
   for (let n = 1; n <= 4; n++) for (const k of ['k', 'h', 'p']) used.add(`intro.s${n}.${k}`)
   const missing = [...used].filter((k) => !(k in en))
   expect(missing).toEqual([])

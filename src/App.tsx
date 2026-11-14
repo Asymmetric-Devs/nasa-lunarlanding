@@ -11,6 +11,7 @@ import { Settings } from './components/Settings'
 import { Header } from './components/Header'
 import { Guide } from './components/Guide'
 import { fmtDateTime, fmtLat, fmtLon } from './lib/format'
+import { externalSiteLinks } from './lib/links'
 import { loadTerrain } from './lib/terrainStore'
 import { useT, scName } from './i18n'
 import Intro from './components/Intro'
@@ -28,6 +29,7 @@ function Navigator() {
   const tc = sc.t + cursorH * 3.6e6
   const now = useMemo(() => (res ? sampleNow(res, tc, cfg) : null), [res, tc, cfg])
   const site = sc.siteId ? SITES.find((s) => s.id === sc.siteId) : null
+  const ext = useMemo(() => externalSiteLinks(sc.lat, sc.lon), [sc.lat, sc.lon])
   const [hint, setHint] = useState(!tourSeen)
 
   useEffect(() => { // playback: the whole window in ~24 s
@@ -53,7 +55,12 @@ function Navigator() {
         <div className="stage-head">
           <div className="title">
             <h1>{scName(sc, t)}</h1>
-            <p className="mono">{fmtLat(sc.lat)} · {fmtLon(sc.lon)}{res ? ` · ${(res.hor.siteHeightM / 1000).toFixed(2)} km ${t('elevation')}` : ''}</p>
+            <p className="mono">{fmtLat(sc.lat)} · {fmtLon(sc.lon)}{res ? ` · ${(res.hor.siteHeightM / 1000).toFixed(2)} km ${t('elevation')}` : ''}
+              <span className="ext-links">
+                <a href={ext.quickmap} target="_blank" rel="noopener noreferrer" title={t('ext.open', { tool: t('ext.quickmap') })}>{t('ext.quickmap')} ↗</a>
+                <a href={ext.moontrek} target="_blank" rel="noopener noreferrer" title={t('ext.open', { tool: t('ext.trek') })}>{t('ext.trek')} ↗</a>
+              </span>
+            </p>
           </div>
           <DateControl sc={sc} onChange={(v) => updateScenario(sc.id, { t: v })} />
         </div>

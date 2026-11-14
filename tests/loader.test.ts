@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { loadGrid } from '../src/engine/loader'
 import { Terrain, computeHorizon } from '../src/engine/terrain'
+import { externalSiteLinks } from '../src/lib/links'
 const dir = fileURLToPath(new URL('../public/data/', import.meta.url)).replace(/\\/g, '/')
 const fetcher = async (u: string) => { const b = readFileSync(u); return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer }
 it('decodes delta terrain within quantisation error of the source DEM', async () => {
@@ -59,4 +60,19 @@ it('computes local terrain slope in degrees and exposes siteSlopeDeg on Horizon'
   expect(t.slope(-70, 0)).toBeNull()
   const hor = computeHorizon(t, -89.534, 209.948, 50)
   expect(hor.siteSlopeDeg).toBe(sRidge)
+})
+
+it('builds contextual QuickMap and Moon Trek deep-links for polar and equatorial coordinates', () => {
+  const polar = externalSiteLinks(-89.5, 209.9)
+  expect(polar.quickmap).toContain('quickmap.lroc.im-ldi.com/?extent=')
+  expect(polar.quickmap).toContain('&proj=27')
+  expect(polar.moontrek).toContain('trek.nasa.gov/moon/#v=0.1&')
+  expect(polar.moontrek).toContain('p=urn%3Aogc%3Adef%3Acrs%3AIAU2000%3A%3A30120')
+  expect(polar.moontrek).toMatch(/x=-\d+&y=-\d+/)
+
+  const eq = externalSiteLinks(0.67, 23.47)
+  expect(eq.quickmap).toContain('&proj=16')
+  expect(eq.quickmap).toMatch(/extent=\d+,\d+,\d+,\d+/)
+  expect(eq.moontrek).toContain('p=urn%3Aogc%3Adef%3Acrs%3AEPSG%3A%3A104903')
+  expect(eq.moontrek).toContain('x=23.4700&y=0.6700')
 })

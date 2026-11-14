@@ -91,4 +91,5 @@ export const es: Record<keyof typeof en, string> = {
   'about.go.horizons': 'Horizons (JPL)', 'about.go.horizons.d': 'La efeméride de referencia. Las direcciones del Sol y la Tierra de Sunline se contrastan con ella (menos de 0,005°).',
   'about.go.csa': 'Exploración lunar (CSA)', 'about.go.csa.d': 'Portal de Canadá: Artemis, Gateway, Canadarm3 y los rovers lunares canadienses.',
   'about.go.note': 'Contexto de la CSA: la noche lunar dura unas dos semanas, con temperaturas de hasta −200 °C. Por eso sobrevivirla, o hibernar durante ella, importa en una misión polar. Las fechas de Artemis en las páginas de la CSA son metas y pueden cambiar.',
+  'ext.quickmap': 'LROC QuickMap', 'ext.trek': 'Moon Trek', 'ext.open': 'Abrir {tool} en estas coordenadas (enlace externo)',
 }

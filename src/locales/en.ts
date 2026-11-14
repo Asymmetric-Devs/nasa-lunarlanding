@@ -102,4 +102,5 @@ export const en = {
   'about.go.horizons': 'Horizons (JPL)', 'about.go.horizons.d': 'The reference ephemeris. Sunline’s Sun and Earth directions are checked against it (under 0.005°).',
   'about.go.csa': 'Moon Exploration (CSA)', 'about.go.csa.d': 'Canada’s portal: Artemis, Gateway, Canadarm3 and Canadian lunar rovers.',
   'about.go.note': 'Context from CSA: the lunar night lasts about two weeks, with temperatures down to −200 °C. That is why surviving it, or hibernating through it, matters for a polar mission. Artemis dates on CSA’s pages are targets and can change.',
+  'ext.quickmap': 'LROC QuickMap', 'ext.trek': 'Moon Trek', 'ext.open': 'Open {tool} at these coordinates (external link)',
 } as const

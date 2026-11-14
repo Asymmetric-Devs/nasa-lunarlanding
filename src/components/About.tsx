@@ -1,13 +1,19 @@
 import { Modal } from './Modal'
 import { useT } from '../i18n'
-const TOOLS = [
-  { k: 'quickmap', href: 'https://quickmap.lroc.im-ldi.com/' },
-  { k: 'trek', href: 'https://trek.nasa.gov/moon/' },
-  { k: 'horizons', href: 'https://ssd.jpl.nasa.gov/horizons/' },
-  { k: 'csa', href: 'https://www.asc-csa.gc.ca/eng/astronomy/moon-exploration/' },
-] as const
+import { useStore } from '../store'
+import { externalSiteLinks } from '../lib/links'
+
 export function About({ onClose }: { onClose(): void }) {
   const t = useT()
+  const { scenarios, activeId } = useStore()
+  const sc = scenarios.find((s) => s.id === activeId)!
+  const ext = externalSiteLinks(sc.lat, sc.lon)
+  const TOOLS = [
+    { k: 'quickmap', href: ext.quickmap },
+    { k: 'trek', href: ext.moontrek },
+    { k: 'horizons', href: 'https://ssd.jpl.nasa.gov/horizons/' },
+    { k: 'csa', href: 'https://www.asc-csa.gc.ca/eng/astronomy/moon-exploration/' },
+  ] as const
   return (
     <Modal onClose={onClose} label={t('about.title')}>
       <p className="eyebrow">{t('about.eyebrow')}</p>
