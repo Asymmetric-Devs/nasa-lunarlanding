@@ -181,7 +181,7 @@ export default function Intro({ progress }: { progress: { p: number; label: stri
           <h2><span className="big">{t('how.a')}</span> <span className="serif">{t('how.b')}</span></h2>
           <ol>{(['1', '2', '3', '4'] as const).map((n) => <li key={n}><span className="num">0{n}</span><b>{t(`intro.s${n}.h` as any)}</b><p>{t(`intro.s${n}.p` as any)}</p></li>)}</ol>
           <div className="facts2">
-            <div><b>&lt;0.005°</b><span>{t('intro.f1')}</span></div><div><b>r 0.92</b><span>{t('intro.f2')}</span></div><div><b>80 m</b><span>{t('facts.res')}</span></div>
+            <div><b>&lt;0.005°</b><span>{t('intro.f1')}</span></div><div><b>r 0.98</b><span>{t('intro.f2')}</span></div><div><b>80 m</b><span>{t('facts.res')}</span></div>
           </div>
         </div>
       </section>

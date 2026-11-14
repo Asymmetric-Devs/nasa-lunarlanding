@@ -45,6 +45,14 @@ function Inner({ res, now, tMs }: { res: Result; now: Sample; tMs: number }) {
 
   useEffect(() => {
     const g = gl.current; if (!g || !supported) return
+    const { core, cap } = grids()
+    const tile = res.terrain.layers.find((l) => l !== core && l !== cap) ?? null
+    g.setTile(tile)
+    schedule()
+  }, [res.terrain, supported])
+
+  useEffect(() => {
+    const g = gl.current; if (!g || !supported) return
     g.resize(size.w, size.h, Math.min(window.devicePixelRatio || 1, 1.5))
     g.setSunPhysical(sky.sunDir)
     g.setView({ cx, cy, radius, tilt, exag: tilt > 1 ? 2 : 0 })

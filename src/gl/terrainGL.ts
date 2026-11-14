@@ -16,9 +16,14 @@ function toTexture(g: PolarGrid) {
 }
 
 const HEIGHT_GLSL = /* glsl */ `
+uniform sampler2D uTile; uniform vec4 uTileP; uniform float uHasTile;
 uniform sampler2D uCore; uniform vec4 uCoreP;   // centre col/row (texel coords of the pole), n, res_m
 uniform sampler2D uCap;  uniform vec4 uCapP; uniform float uHasCap;
 float H(vec2 xy, out float valid) {
+  if (uHasTile > 0.5) {
+    vec2 uv0 = (uTileP.xy + xy * 1000.0 / uTileP.w + 0.5) / uTileP.z;
+    if (uv0.x > 0.0 && uv0.y > 0.0 && uv0.x < 1.0 && uv0.y < 1.0) { float h = textureLod(uTile, uv0, 0.0).r; if (h > -30.0) { valid = 1.0; return h; } }
+  }
   vec2 uv = (uCoreP.xy + xy * 1000.0 / uCoreP.w + 0.5) / uCoreP.z;
   if (uv.x > 0.0 && uv.y > 0.0 && uv.x < 1.0 && uv.y < 1.0) { float h = textureLod(uCore, uv, 0.0).r; if (h > -30.0) { valid = 1.0; return h; } }
   if (uHasCap > 0.5) {
@@ -110,6 +115,7 @@ export class TerrainGL {
   scale = 1; maxScale = 1; software = false
   private slow = 0; private fast = 0
   private textures: THREE.DataTexture[] = []
+  private tileTex: THREE.DataTexture | null = null
   private dummy = new THREE.DataTexture(new Uint16Array([0]), 1, 1, THREE.RedFormat, THREE.HalfFloatType)
 
   static supported() {
@@ -127,6 +133,7 @@ export class TerrainGL {
     this.mat = new THREE.ShaderMaterial({
       vertexShader: VERT, fragmentShader: FRAG, side: THREE.DoubleSide,
       uniforms: {
+        uTile: { value: this.dummy }, uTileP: { value: new THREE.Vector4(0, 0, 1, 80) }, uHasTile: { value: 0 },
         uCore: { value: this.dummy }, uCoreP: { value: new THREE.Vector4(0, 0, 1, 80) }, uCap: { value: this.dummy }, uCapP: { value: new THREE.Vector4(0, 0, 1, 240) }, uHasCap: { value: 0 },
         uView: { value: new THREE.Vector4(0, 0, 100, 1) }, uSun: { value: new THREE.Vector3(1, 0, 0.03).normalize() }, uIll: { value: new THREE.Vector3(1, 0, 0.03) }, uMode: { value: 0 }, uSteps: { value: 150 },
         uCont: { value: new THREE.Vector4(0.25, 0, 1.1, 0) }, uLineCol: { value: new THREE.Vector3(1, 0.62, 0.2) }, uBg: { value: new THREE.Vector3(...bg) }, uMarker: { value: new THREE.Vector3(0, 0, 0) }, uShadows: { value: 1 }, uExposure: { value: 1 },
@@ -141,6 +148,19 @@ export class TerrainGL {
     const tc = toTexture(core); this.textures.push(tc); u.uCore.value = tc
     u.uCoreP.value.set(core.c - (core.x0 ?? 0), core.c - (core.y0 ?? 0), core.n, core.res_m)
     if (cap) { const tp = toTexture(cap); this.textures.push(tp); u.uCap.value = tp; u.uCapP.value.set(cap.c - (cap.x0 ?? 0), cap.c - (cap.y0 ?? 0), cap.n, cap.res_m); u.uHasCap.value = 1 }
+  }
+
+  /** Upload or clear the optional 80 m fine site tile (takes precedence over core80 and polar240). */
+  setTile(tile?: PolarGrid | null) {
+    const u = this.mat.uniforms
+    if (this.tileTex) { this.tileTex.dispose(); this.tileTex = null }
+    if (tile) {
+      const tt = toTexture(tile); this.tileTex = tt; u.uTile.value = tt
+      u.uTileP.value.set(tile.c - (tile.x0 ?? 0), tile.c - (tile.y0 ?? 0), tile.n, tile.res_m)
+      u.uHasTile.value = 1
+    } else {
+      u.uTile.value = this.dummy; u.uHasTile.value = 0
+    }
   }
 
   dprBase = 1
@@ -179,7 +199,7 @@ export class TerrainGL {
   }
 
   render() { this.renderer.render(this.scene, this.camera) }
-  dispose() { this.textures.forEach((t) => t.dispose()); this.dummy.dispose(); this.mesh.geometry.dispose(); this.mat.dispose(); this.renderer.dispose(); this.renderer.forceContextLoss() }
+  dispose() { this.tileTex?.dispose(); this.textures.forEach((t) => t.dispose()); this.dummy.dispose(); this.mesh.geometry.dispose(); this.mat.dispose(); this.renderer.dispose(); this.renderer.forceContextLoss() }
 }
 
 export { R_MOON }

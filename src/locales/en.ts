@@ -48,6 +48,9 @@ export const en = {
   'v.comms.tip': 'Share of the time the whole Earth disc clears the terrain and your antenna mask, so no relay satellite is needed.',
   'v.sunlit': '{n}% sunlit', 'v.longest': '{d} longest dark', 'v.link': '{n}% link',
   'v.power.sub': 'Mean panel output {out}% · peak Sun {peak}° · needs ≥ {min}%', 'v.dark.sub': '{n} dark period(s) · limit {lim}', 'v.comms.sub': 'Longest outage {out} · {w} window(s) · needs ≥ {min}%',
+  'v.comms.maskwarn': 'Antenna mask ({mask}°) exceeds peak Earth elevation here ({max}°) — direct link is 0%.',
+  'v.comms.masknear': 'Antenna mask ({mask}°) is near peak Earth elevation here ({max}°), cutting link time.',
+  'v.slope': 'Local slope {s}° · elevation {h} m', 'v.slope.steep': ' · steep (>10°)',
   // readouts
   'ro.elev': 'elevation', 'ro.az': 'Azimuth', 'ro.hor': 'Terrain horizon there', 'ro.hor.tip': 'How high the skyline is in the direction of this body. The body must be above this to be seen.',
   'ro.disc': '{n}% of disc visible', 'ro.hidden': 'below terrain', 'ro.sunset': 'Sunset in', 'ro.sunrise': 'Sunrise in',
@@ -62,6 +65,7 @@ export const en = {
   'cmp.empty.h': 'Only one scenario so far.', 'cmp.empty.p': 'Add sites with the + button in the Navigator list, or duplicate this one with a later date.', 'cmp.empty.go': 'Go to Navigator',
   'cmp.open': 'Open in Navigator', 'cmp.remove': 'Remove', 'cmp.sunlit': 'Sunlit time', 'cmp.power': 'Mean panel output', 'cmp.power.tip': 'Average output of your chosen array type, as a share of full sunshine.', 'cmp.peak': 'Peak Sun elevation',
   'cmp.dark': 'Longest darkness', 'cmp.periods': 'Dark periods', 'cmp.link': 'Earth link', 'cmp.outage': 'Longest comm outage', 'cmp.both': 'Sun and Earth together', 'cmp.both.tip': 'Time with both power and a direct link: when operations are possible.',
+  'cmp.slope': 'Terrain slope', 'cmp.slope.tip': 'Local ground tilt from the 80–240 m LOLA DEM. Landers typically need under 10°.',
   'cmp.tip': 'You can add {n} more scenarios.', 'cmp.dup': 'Duplicate active, +1 month',
   'sens.eyebrow': 'Why small moves matter', 'sens.title': 'A few metres can change everything', 'sens.sub': 'Sunlit time of {n} if the lander touches down off target.', 'sens.offset': 'Offset', 'sens.dark': 'dark', 'sens.loading': 'Computing 9 horizons…',
   'sens.msg': 'Within ±{s} m the Sun reaches the lander {a}–{b}% of the time.', 'sens.risk': 'A landing ellipse that size is a real scheduling risk.', 'sens.ok': 'This spot is forgiving.',
@@ -89,7 +93,7 @@ export const en = {
   'about.eph.h': 'Ephemeris', 'about.eph.p': 'Sun and Earth come from the Astronomy Engine (±1′), rotated into the Moon-fixed Mean Earth frame with the IAU 2015 / Archinal 2018 lunar orientation model including libration. Directions are topocentric: Earth’s parallax from the surface (0.26°) is applied.',
   'about.eph.v': 'Validation: against JPL Horizons (DE441, MEAN_ME) the Sun and Earth azimuth and elevation agree to less than 0.005° at an equatorial site (Apollo 11) and at a south-polar ridge, over multi-week series.',
   'about.ter.h': 'Terrain and horizon', 'about.ter.p': 'LOLA gridded elevation (LRO / NASA PDS): 80 m within 150 km of the pole, 240 m down to 75°S, and 80 m tiles at curated sites. For every site a 360° horizon is ray-marched to 220 km with exact spherical geometry (no atmosphere, no refraction). Sun and Earth are discs, so partial hiding is modelled.',
-  'about.ter.v': 'Validation: yearly Sun visibility versus the LOLA average-illumination map (AVGVISIB_85S_060M), 60 random points from 85.3°S to 89.9°S, 2009–2013: correlation 0.92, mean absolute error 2.2 percentage points.',
+  'about.ter.v': 'Validation: long-term Sun and Earth visibility versus the LOLA average-visibility maps (AVGVISIB_85S_060M), 300 random points (5 seeds × 60) from 85.3°S to 89.9°S, averaged over 18.6 years. Sun: correlation 0.98, mean absolute error 1.1 percentage points. Earth: correlation 0.99, 1.2 points. The maps count any visible part of the disc, so this checks the visibility geometry, not the stricter link criterion.',
   'about.lim.h': 'Limits you should know', 'about.lim.p': 'Terrain exists for 75°S–90°S only; elsewhere the horizon is a bare sphere. Results depend on DEM resolution, mast height and the exact coordinate: a few tens of metres can change them, which is part of the point. Sites marked “~” are region centres, not final selections. The hero image is an illustration. This is a planning aid, not flight-certified.',
   'about.src.h': 'Sources', 'about.src.p': 'NASA LRO/LOLA (PDS Geosciences), NASA SVS CGI Moon Kit, NASA Blue Marble, JPL Horizons, Astronomy Engine, IAU WGCCRE reports. “Sunlit” means any part of the solar disc is visible; “link” means the whole Earth disc clears the terrain plus your antenna mask.',
   'about.go.h': 'Go deeper: official tools', 'about.go.p': 'Sunline is for fast comparison. When a site looks promising, check it in the tools NASA and partner agencies provide:',
@@ -98,4 +102,5 @@ export const en = {
   'about.go.horizons': 'Horizons (JPL)', 'about.go.horizons.d': 'The reference ephemeris. Sunline’s Sun and Earth directions are checked against it (under 0.005°).',
   'about.go.csa': 'Moon Exploration (CSA)', 'about.go.csa.d': 'Canada’s portal: Artemis, Gateway, Canadarm3 and Canadian lunar rovers.',
   'about.go.note': 'Context from CSA: the lunar night lasts about two weeks, with temperatures down to −200 °C. That is why surviving it, or hibernating through it, matters for a polar mission. Artemis dates on CSA’s pages are targets and can change.',
+  'ext.quickmap': 'LROC QuickMap', 'ext.trek': 'Moon Trek', 'ext.open': 'Open {tool} at these coordinates (external link)',
 } as const

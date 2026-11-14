@@ -30,7 +30,7 @@ A web tool to compare lunar landing sites and dates in seconds: Sun and Earth ov
 npm install
 npm run dev        # http://localhost:5173
 npm run build      # static site in dist/ (relative paths, host anywhere)
-npm test           # ephemeris vs JPL Horizons, terrain decode, illumination vs LOLA
+npm test           # ephemeris vs JPL Horizons, terrain decode; Sun/Earth visibility vs LOLA if data-raw/ exists
 ```
 
 ## What it does
@@ -56,7 +56,15 @@ Also: **English / Spanish**, **light / dark** theme, an in-app **Guide**, keyboa
 | Check | Result | Where |
 |---|---|---|
 | Sun & Earth az/el vs **JPL Horizons** (DE441, MEAN_ME), Apollo 11 + a south-polar ridge | **max error < 0.005°** | `tests/ephemeris.test.ts`, fixtures from `scripts/fetch_horizons.sh` |
-| Annual Sun visibility vs **LOLA average-illumination map** (AVGVISIB_85S_060M, 60 random points 85.3–89.9°S, 2009–2013) | **r = 0.92, MAE 2.2 pp** | `tests/illumination.test.ts` (needs `data-raw/`) |
+| Sun visibility vs **LOLA average-visibility map** (AVGVISIB_85S_060M, 300 random points (5 seeds × 60) 85.3–89.9°S, 18.6-year average) | **r = 0.98, MAE 1.1 pp** | `tests/visibility.test.ts` (needs `data-raw/`) |
+| Earth visibility vs **LOLA Earth-visibility map** (AVGVISIB_85S_060M_EARTH, same sampling) | **r = 0.99, MAE 1.2 pp** | `tests/visibility.test.ts` (needs `data-raw/`) |
+
+Both maps count the share of time with *any fraction* of the disc above the terrain, and that is what is compared. The Earth check validates the visibility geometry; the *link* figure in the app is stricter (whole disc plus the antenna mask) and has no reference map. The labels do not state the period the maps average over, so the test uses one 18.6-year nodal cycle.
+
+```bash
+scripts/fetch_validation_data.sh   # ~220 MB of public LOLA files into data-raw/
+npm run test:validation            # fails, instead of skipping, if the data is missing
+```
 
 Finding worth knowing: results depend on DEM resolution (one site went from 21 % to 45 % annual sunlight between 240 m and 80 m terrain) — the tool says so rather than hiding it.
 
@@ -66,7 +74,7 @@ Finding worth knowing: results depend on DEM resolution (one site went from 21 %
 # download (see scripts/ and the data section of the app for URLs)
 #   LOLA LDEM_75S_240M and LDEM_80S_80M float IMG  -> data-raw/dem75s240, data-raw/dem80s80
 #   SVS CGI Moon Kit (lroc_color_2k.jpg, ldem_3_8bit.jpg) -> data-raw/moonkit
-#   LOLA AVGVISIB_85S_060M (+ .LBL)                -> data-raw/illum85   (validation only)
+#   validation only: scripts/fetch_validation_data.sh  -> data-raw/illum85, data-raw/dem80s80
 python3 -I scripts/build_data.py "$PWD/data-raw" "$PWD"
 ```
 

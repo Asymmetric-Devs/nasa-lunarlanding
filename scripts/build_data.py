@@ -30,7 +30,7 @@ R = 1737.4
 
 # ---- 240 m cap 75S..90S, int16 metres (relative to 1737.4 km sphere) ----
 a = np.fromfile(f"{raw}/dem75s240/ldem_75s_240m_float.img", dtype='<f4').reshape(3812, 3812)
-n = 3812; c = 1905.5 - 0.5  # pixel-centre index of the pole (0-based)
+n = 3812; c = 1905.5  # 0-based index of the pole = LINE/SAMPLE_PROJECTION_OFFSET of the label = (n - 1) / 2
 yy, xx = np.mgrid[0:n, 0:n]
 rho_px = np.hypot(xx - c, yy - c)
 rmax = 2 * R * math.tan(math.radians(7.5)) / 0.24  # 75S circle
@@ -43,7 +43,7 @@ json.dump({"n": n, "res_m": 240, "center": c, "radius_km": R, "units": "m", "nod
            "extent_latmax": -75}, open(f"{proj}/public/data/polar240.json", "w"))
 print("240m ok", h.shape, (h == -32768).mean())
 
-# ---- 80 m polar core, radius 150 km (to ~88.6S) ----
+# ---- 80 m polar core, 300 km square: 150 km half-width, reaching ~85.05S along the axes ----
 b0 = np.fromfile(f"{raw}/dem80s80/ldem_80s_80m_float.img", dtype='<f4')
 nb0 = int(math.isqrt(b0.size)); b0 = b0.reshape(nb0, nb0); cc0 = (nb0 - 1) / 2
 hw = int(150 / 0.08)
@@ -66,8 +66,9 @@ half = 150  # samples -> 300x300 @ 80 m = 24 km
 for s in sites:
     if s["lat"] > -80: continue
     cx, cy = site_px(s["lat"], s["lon"], 0.08, cb)
-    x0, y0 = int(round(cx)) - half, int(round(cy)) - half
-    if x0 < 0 or y0 < 0 or x0 + 2 * half > nb or y0 + 2 * half > nb: print("skip", s["id"]); continue
+    if not (0 <= cx < nb and 0 <= cy < nb): print("skip", s["id"]); continue
+    x0 = max(0, min(nb - 2 * half, int(round(cx)) - half))
+    y0 = max(0, min(nb - 2 * half, int(round(cy)) - half))
     t = np.round(b[y0:y0 + 2 * half, x0:x0 + 2 * half] * 1000).astype('<i2')
     encode_delta(t).tofile(f"{proj}/public/data/tile_{s['id']}.d8")
     tiles[s["id"]] = {"n": 2 * half, "res_m": 80, "x0": x0, "y0": y0, "q": Q, "enc": "d8"}

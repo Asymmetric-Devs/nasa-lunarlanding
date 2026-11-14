@@ -21,12 +21,13 @@ const ROWS: Row[] = [
   { label: 'cmp.link', get: (r) => r.analysis.metrics.linkPct, fmt: (v) => `${v.toFixed(0)}%`, best: 'max' },
   { label: 'cmp.outage', get: (r) => r.analysis.metrics.longestOutageH, fmt: (v) => fmtDur(v), best: 'min' },
   { label: 'cmp.both', get: (r) => r.analysis.metrics.bothPct, fmt: (v) => `${v.toFixed(0)}%`, best: 'max', tip: 'cmp.both.tip' },
+  { label: 'cmp.slope', get: (r) => r.hor.siteSlopeDeg ?? Infinity, fmt: (v) => (Number.isFinite(v) ? `${v.toFixed(1)}°` : '—'), best: 'min', tip: 'cmp.slope.tip' },
 ]
 
 function Sensitivity({ sc }: { sc: Scenario }) {
   const { cfg, spanDays } = useStore(); const t = useT()
   const [step, setStep] = useState(100)
-  const [cells, setCells] = useState<{ dn: number; de: number; sun: number; dark: number }[] | null>(null)
+  const [cells, setCells] = useState<{ dn: number; de: number; sun: number; dark: number; slope: number | null }[] | null>(null)
   useEffect(() => {
     let dead = false; setCells(null)
     const id = setTimeout(async () => {
@@ -34,7 +35,7 @@ function Sensitivity({ sc }: { sc: Scenario }) {
       for (const dn of [1, 0, -1]) for (const de of [-1, 0, 1]) {
         const lat = sc.lat + ((dn * step) / 1000 / MOON_RADIUS_KM) * R2D, lon = sc.lon + ((de * step) / 1000 / (MOON_RADIUS_KM * Math.cos((sc.lat * Math.PI) / 180))) * R2D
         const r = await computeResult({ ...sc, lat, lon }, spanDays, cfg)
-        out.push({ dn, de, sun: r.analysis.metrics.sunlitPct, dark: r.analysis.metrics.longestDarkH })
+        out.push({ dn, de, sun: r.analysis.metrics.sunlitPct, dark: r.analysis.metrics.longestDarkH, slope: r.hor.siteSlopeDeg })
       }
       if (!dead) setCells(out)
     }, 30)
@@ -48,7 +49,7 @@ function Sensitivity({ sc }: { sc: Scenario }) {
       <div className="sens-body">
         <div className="sens-grid">{cells ? cells.map((c, i) => (
           <div key={i} className={`sens-cell ${c.dn === 0 && c.de === 0 ? 'ctr' : ''}`} style={{ background: `color-mix(in srgb, var(--sun) ${Math.round(8 + c.sun * 0.72)}%, var(--s2))` }} title={`${c.dn * step} m N, ${c.de * step} m E`}>
-            <b className="mono">{c.sun.toFixed(0)}%</b><small className="mono">{t('sens.dark')} {fmtDur(c.dark)}</small></div>)) : <div className="loading mono" style={{ gridColumn: '1/-1' }}>{t('sens.loading')}</div>}
+            <b className="mono">{c.sun.toFixed(0)}%</b><small className="mono">{t('sens.dark')} {fmtDur(c.dark)}</small>{c.slope !== null && <small className="mono">{c.slope.toFixed(1)}°</small>}</div>)) : <div className="loading mono" style={{ gridColumn: '1/-1' }}>{t('sens.loading')}</div>}
           <span className="cn">N</span><span className="ce">E</span></div>
         {range && <p className="sens-msg">{t('sens.msg', { s: step, a: range[0].toFixed(0), b: range[1].toFixed(0) })} {range[1] - range[0] > 15 ? t('sens.risk') : t('sens.ok')}</p>}
       </div>
