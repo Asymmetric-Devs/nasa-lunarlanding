@@ -29,16 +29,19 @@ function loadTerrain() {
   return new Terrain({ data: d16, n, res_m: 80, c: (n - 1) / 2, nodata: -32768 })
 }
 
-describe('visibility vs LOLA AVGVISIB_85S_060M (2009-07-13 .. 2013-07-18)', () => {
+// The labels do not state the simulated period: their START_TIME/STOP_TIME (2009-07-13 .. 2013-07-18) is the span of
+// the LOLA altimetry, the DEM label starts at the same instant. We average over one 18.6-year nodal cycle from that
+// start, which covers every Sun and Earth geometry the Moon repeats.
+const T0 = Date.UTC(2009, 6, 13, 17), STEP_MS = 4 * 3600e3, N_STEPS = Math.floor((18.6 * 365.25 * 86400e3) / STEP_MS)
+
+describe('visibility vs LOLA AVGVISIB_85S_060M (18.6-year average)', () => {
   for (const body of bodies) {
     const have = existsSync(new URL(body.file, raw))
     it.skipIf(!have)(body.name, () => {
       const terrain = loadTerrain()
       const v = readFileSync(new URL(body.file, raw))
       const map = new Int16Array(v.buffer, v.byteOffset, v.byteLength / 2)
-      const t0 = Date.UTC(2009, 6, 13, 17), t1 = Date.UTC(2013, 6, 18, 14)
-      const stepMs = 3600e3, N = Math.floor((t1 - t0) / stepMs)
-      const series = buildSeries(t0, stepMs, N)
+      const series = buildSeries(T0, STEP_MS, N_STEPS)
       let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647
       const pts: { lat: number; lon: number; ref: number; mine: number }[] = []
       while (pts.length < 60) {
