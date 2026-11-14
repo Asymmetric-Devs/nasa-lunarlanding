@@ -13,7 +13,7 @@ it.skipIf(!have)('EARTH visibility vs LOLA AVGVISIB_85S_060M_EARTH (2009-07-13 .
   const n = Math.round(Math.sqrt(km.length))
   const terrain = new Terrain({ data: d16, n, res_m: 80, c: (n - 1) / 2, nodata: -32768 })
   const v = readFileSync(new URL('illum85/AVGVISIB_85S_060M_201608_EARTH.IMG', raw))
-  const map = new Int16Array(v.buffer, v.byteOffset, v.byteLength / 2); const mn = 5058, mc = 2527.5
+  const map = new Int16Array(v.buffer, v.byteOffset, v.byteLength / 2); const mn = 5058, mc = 2528.5
   const t0 = Date.UTC(2009, 6, 13, 17), t1 = Date.UTC(2013, 6, 18, 14)
   const stepMs = 3600e3, N = Math.floor((t1 - t0) / stepMs)
   const series = buildSeries(t0, stepMs, N)
