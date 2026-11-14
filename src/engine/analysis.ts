@@ -1,5 +1,6 @@
 import { skyState, localBasis, azEl, topoDir, angularRadiusDeg, SUN_RADIUS_KM, EARTH_RADIUS_KM, MOON_RADIUS_KM, type SkyState } from './ephemeris'
 import { Horizon, horizonAt } from './terrain'
+import { angularSeparation, sunCoveredByEarth } from './eclipse'
 
 export const SOLAR_CONSTANT = 1361 // W/m2 at 1 AU
 export const AU = 149597870.7
@@ -23,6 +24,8 @@ export const defaultConfig: Config = { minEarthEl: 5, panel: 'vertical', mastM: 
 export interface Sample {
   sunAz: number; sunEl: number; sunFrac: number; sunRadius: number
   earthAz: number; earthEl: number; earthFrac: number; earthRadius: number
+  /** share of the Sun's disc hidden by the Earth (lunar eclipse seen from the Moon), 0..1 */
+  sunEclipsed: number
   power: number // fraction of 1 AU solar constant on a unit panel
   earthLink: boolean; sunlit: boolean
 }
@@ -39,14 +42,16 @@ export function sampleAt(sky: SkyState, lat: number, lon: number, hor: Horizon, 
   const s = azEl(topoDir(sky.sunDir, sky.sunDistKm, b, siteR), b)
   const e = azEl(topoDir(sky.earthDir, sky.earthDistKm, b, siteR), b)
   const sr = angularRadiusDeg(SUN_RADIUS_KM, sky.sunDistKm), er = angularRadiusDeg(EARTH_RADIUS_KM, sky.earthDistKm)
-  const sFrac = discFractionAbove(s.el, sr, horizonAt(hor, s.az))
+  const eclipsed = sunCoveredByEarth(sr, er, angularSeparation(s.az, s.el, e.az, e.el))
+  const sFrac = discFractionAbove(s.el, sr, horizonAt(hor, s.az)) * (1 - eclipsed) // product: exact when either hiding is total or absent
   const eFrac = discFractionAbove(e.el, er, horizonAt(hor, e.az))
   const dist = sky.sunDistKm / AU
   const elRad = Math.max(0, s.el) * Math.PI / 180
   const geo = cfg.panel === 'horizontal' ? Math.sin(elRad) : cfg.panel === 'vertical' ? Math.cos(elRad) : 1
   const power = sFrac * geo / (dist * dist)
-  const earthLink = e.el - cfg.minEarthEl >= horizonAt(hor, e.az) && eFrac > 0.999
-  return { sunAz: s.az, sunEl: s.el, sunFrac: sFrac, sunRadius: sr, earthAz: e.az, earthEl: e.el, earthFrac: eFrac, earthRadius: er, power, earthLink, sunlit: sFrac > 0 }
+  // Antenna mask = minimum elevation above the LOCAL horizontal plane; terrain blocking is checked separately (whole disc must clear it).
+  const earthLink = e.el >= cfg.minEarthEl && eFrac > 0.999
+  return { sunAz: s.az, sunEl: s.el, sunFrac: sFrac, sunRadius: sr, earthAz: e.az, earthEl: e.el, earthFrac: eFrac, earthRadius: er, sunEclipsed: eclipsed, power, earthLink, sunlit: sFrac > 0 }
 }
 
 export interface Interval { start: number; end: number }
