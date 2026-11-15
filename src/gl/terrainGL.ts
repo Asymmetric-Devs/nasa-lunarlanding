@@ -113,7 +113,7 @@ export class TerrainGL {
   mesh: THREE.Mesh
   w = 1; h = 1
   scale = 1; maxScale = 1; software = false
-  private slow = 0; private fast = 0
+  private slow = 0; private fast = 0; private baseSteps = 150; private stepScale = 1
   private textures: THREE.DataTexture[] = []
   private tileTex: THREE.DataTexture | null = null
   private dummy = new THREE.DataTexture(new Uint16Array([0]), 1, 1, THREE.RedFormat, THREE.HalfFloatType)
@@ -128,7 +128,7 @@ export class TerrainGL {
     this.renderer.setClearColor(new THREE.Color(bg[0], bg[1], bg[2]), 1)
     this.dummy.needsUpdate = true
     try { const gl = this.renderer.getContext(); const ext = gl.getExtension('WEBGL_debug_renderer_info'); const name = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : ''; this.software = /swiftshader|llvmpipe|software/i.test(name) } catch { /* ignore */ }
-    if (this.software) { this.scale = 0.3; this.maxScale = 0.4 }
+    if (this.software) { this.scale = 0.5; this.maxScale = 0.65 }
     const q = Number(new URLSearchParams(location.search).get('q')); if (q > 0) { this.scale = q; this.maxScale = q } // test override: ?q=0.8
     this.mat = new THREE.ShaderMaterial({
       vertexShader: VERT, fragmentShader: FRAG, side: THREE.DoubleSide,
@@ -139,7 +139,8 @@ export class TerrainGL {
         uCont: { value: new THREE.Vector4(0.25, 0, 1.1, 0) }, uLineCol: { value: new THREE.Vector3(1, 0.62, 0.2) }, uBg: { value: new THREE.Vector3(...bg) }, uMarker: { value: new THREE.Vector3(0, 0, 0) }, uShadows: { value: 1 }, uExposure: { value: 1 },
       },
     })
-    const geo = new THREE.PlaneGeometry(2, 2, 560, 560)
+    const seg = this.software ? 180 : 560
+    const geo = new THREE.PlaneGeometry(2, 2, seg, seg)
     this.mesh = new THREE.Mesh(geo, this.mat); this.mesh.frustumCulled = false; this.scene.add(this.mesh)
   }
 
@@ -166,11 +167,24 @@ export class TerrainGL {
   dprBase = 1
   resize(w: number, h: number, dpr: number) { if (w === this.w && h === this.h && dpr === this.dprBase) return; this.w = w; this.h = h; this.dprBase = dpr; this.apply() }
   private apply() { this.renderer.setPixelRatio(this.dprBase * this.scale); this.renderer.setSize(this.w, this.h, false); this.camera.aspect = this.w / this.h; this.camera.updateProjectionMatrix() }
-  /** Adaptive resolution: if frames are slow, render fewer pixels; if there is headroom, give them back. */
+  /** Adaptive ray-march steps and resolution: shed shader cost before dropping below 0.55x sharpness. */
   adapt(dtMs: number) {
-    if (dtMs > 38) { this.slow++; this.fast = 0 } else if (dtMs < 19) { this.fast++; this.slow = 0 } else { this.slow = 0; this.fast = 0 }
-    if (this.slow >= 6 && this.scale > 0.3) { this.scale = Math.max(0.3, this.scale * 0.8); this.slow = 0; this.apply() }
-    else if (this.fast >= 90 && this.scale < this.maxScale) { this.scale = Math.min(this.maxScale, this.scale * 1.15); this.fast = 0; this.apply() }
+    if (dtMs > 120) { this.slow += 3; this.fast = 0 }
+    else if (dtMs > 38) { this.slow++; this.fast = 0 }
+    else if (dtMs < 19) { this.fast++; this.slow = 0 }
+    else { this.slow = 0; this.fast = 0 }
+
+    if (this.slow >= 6 && (this.stepScale > 0.25 || this.scale > 0.55)) {
+      this.stepScale = Math.max(0.25, this.stepScale * 0.7)
+      this.mat.uniforms.uSteps.value = Math.round(this.baseSteps * this.stepScale)
+      if (this.stepScale <= 0.5) this.scale = Math.max(0.55, this.scale * 0.85)
+      this.slow = 0; this.apply()
+    } else if (this.fast >= 90 && (this.scale < this.maxScale || this.stepScale < 1)) {
+      this.scale = Math.min(this.maxScale, this.scale * 1.15)
+      this.stepScale = Math.min(1, this.stepScale * 1.15)
+      this.mat.uniforms.uSteps.value = Math.round(this.baseSteps * this.stepScale)
+      this.fast = 0; this.apply()
+    }
   }
 
   setLook(l: Partial<Look>) {
@@ -181,7 +195,7 @@ export class TerrainGL {
     if (l.indexStrength !== undefined) u.uCont.value.w = l.indexStrength
     if (l.lineColor) u.uLineCol.value.set(...l.lineColor)
     if (l.shadows !== undefined) u.uShadows.value = l.shadows ? 1 : 0
-    if (l.steps !== undefined) u.uSteps.value = l.steps
+    if (l.steps !== undefined) { this.baseSteps = l.steps; u.uSteps.value = Math.round(this.baseSteps * this.stepScale) }
   }
   /** Physical Sun: unit vector in the Moon-fixed frame. */
   setSunPhysical(v: [number, number, number]) { this.mat.uniforms.uMode.value = 0; this.mat.uniforms.uSun.value.set(...v) }

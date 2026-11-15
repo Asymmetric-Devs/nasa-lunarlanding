@@ -81,25 +81,28 @@ function Hero({ onPin, children }: { onPin(p: number): void; children: React.Rea
     const sc = () => { const h = pin.current!.clientHeight - window.innerHeight; p = clamp01(root.scrollTop / Math.max(1, h)); onPin(p) }
     root.addEventListener('scroll', sc, { passive: true }); sc()
     const t0 = performance.now(); let azAuto = 0.9
-    let lastT = performance.now()
+    let lastT = performance.now(), lastRender = 0, skipped = false
     const tick = (now: number) => {
       raf = requestAnimationFrame(tick); if (!visible) return
       if (STILL && frames++ > 4 && Math.abs(p - lastP) < 1e-4) return; lastP = p
-      gl.adapt(now - lastT); lastT = now
       const idle = now - ptr.last > 3500
       if (idle || reduce) { azAuto += 0.0035; ptr.tx = 0.5 + 0.34 * Math.cos(azAuto + p * 5), ptr.ty = 0.5 + 0.34 * Math.sin(azAuto + p * 5) }
-      ptr.x = lerp(ptr.x, ptr.tx, 0.09); ptr.y = lerp(ptr.y, ptr.ty, 0.09)
+      ptr.x = lerp(ptr.x, ptr.tx, 0.14); ptr.y = lerp(ptr.y, ptr.ty, 0.14)
       const dx = ptr.x - 0.5, dy = (ptr.y - 0.5) * (gl.h / gl.w), dist = Math.min(1, Math.hypot(ptr.x - 0.5, (ptr.y - 0.5)) * 2)
       const elDeg = lerp(7.5, 1.1, dist ** 0.8)
+      if (sunEl.current) { const r = wrap.current!.getBoundingClientRect(); sunEl.current.style.transform = `translate(${ptr.x * r.width}px, ${ptr.y * r.height}px)` }
+      if (sunTxt.current) sunTxt.current.textContent = `${elDeg.toFixed(1)}°`
+      if (gl.scale <= 0.6 && now - lastRender < 36) { skipped = true; return }
+      const dt = now - lastT; lastT = now
+      if (!skipped) gl.adapt(dt)
+      skipped = false
       gl.setSunIllustrative(dx, dy, (elDeg * Math.PI) / 180)
       // scroll-driven camera: flat map -> tilted 3D -> zoom on the ridge
       const tilt = smooth(0.16, 0.46, p) * 58 - smooth(0.86, 1, p) * 18
       const zoom = smooth(0.52, 0.95, p), radius = lerp(104, 30, zoom ** 1.1) * lerp(1, 0.82, smooth(0.16, 0.46, p))
       gl.setView({ cx: ridge.col * smooth(0.52, 0.95, p), cy: ridge.row * smooth(0.52, 0.95, p), radius, tilt, exag: smooth(0.12, 0.44, p) * 2.8 })
       gl.setLook({ contourStrength: lerp(0.3, 0.14, smooth(0.1, 0.5, p)), indexStrength: lerp(0.5, 0.26, smooth(0.1, 0.5, p)) })
-      gl.render()
-      if (sunEl.current) { const r = wrap.current!.getBoundingClientRect(); sunEl.current.style.transform = `translate(${ptr.x * r.width}px, ${ptr.y * r.height}px)` }
-      if (sunTxt.current) sunTxt.current.textContent = `${elDeg.toFixed(1)}°`
+      gl.render(); lastRender = now
       void t0
     }
     raf = requestAnimationFrame(tick)
