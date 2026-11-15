@@ -1,0 +1,51 @@
+<template>
+<style>
+
+@font-face{font-family:'Big Shoulders';src:url('assets/fonts/bigshoulders.woff2') format('woff2');font-weight:100 900}
+@font-face{font-family:'Geist';src:url('assets/fonts/geist.woff2') format('woff2');font-weight:100 900}
+@font-face{font-family:'Geist Mono';src:url('assets/fonts/geistmono.woff2') format('woff2');font-weight:100 900}
+
+#root{position:absolute;inset:0;overflow:hidden;background:#06080c;font-family:'Geist',sans-serif;color:#efece4}
+.cam{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.cam img{position:absolute;left:0;top:0;width:1920px;height:1080px}
+.chip{position:absolute;font:600 30px/1 'Geist Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:#efece4;background:#0b1015;border:2px solid #ffb547;padding:16px 24px 14px 24px;white-space:nowrap}
+.chip b{color:#ffb547;font-weight:700}
+.h1{position:absolute;font:800 132px/0.92 'Big Shoulders',sans-serif;text-transform:uppercase;letter-spacing:.005em;color:#efece4}
+.kick{position:absolute;font:600 32px/1 'Geist Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#ffb547}
+.scrim{position:absolute;inset:0}
+.bscrim{position:absolute;left:0;right:0;bottom:0;height:270px;background:linear-gradient(180deg,rgba(6,8,12,0) 0%,#06080c 42%)}
+
+</style>
+<div id="root" data-composition-id="s3" data-width="1920" data-height="1080">
+
+<div id="s3-camA" class="cam"><img src="assets/shots_es/compare_top.png"></div>
+<div id="s3-camB" class="cam" style="opacity:0"><img src="assets/shots_es/compare_sens.png">
+  <div id="s3-ringC" style="position:absolute;left:370px;top:828px;width:110px;height:66px;border:3px solid #efece4;border-radius:6px"></div>
+  <div id="s3-ringD" style="position:absolute;left:485px;top:828px;width:112px;height:66px;border:3px solid #ff6b5e;border-radius:6px"></div>
+</div>
+<div class="bscrim"></div>
+<div id="s3-c1b" class="chip" style="left:192px;top:800px;opacity:0">elev = atan2(r1·cos(th) - r0, r1·sin(th))</div>
+<div id="s3-c1" class="chip" style="left:192px;top:880px">Horizonte 360° · <b>4</b> escenarios</div>
+<div id="s3-big" class="h1" style="left:1090px;top:90px;font-size:170px;opacity:0;color:#ffb547;white-space:nowrap">65% <span style="color:#efece4">→</span> <span style="color:#ff6b5e">22%</span></div>
+<div id="s3-c2" class="chip" style="left:1090px;top:880px;opacity:0">A <b>100 m</b> de la meta</div>
+<div id="s3-c3" class="chip" style="left:192px;top:880px;opacity:0"><b>9</b> puntos de aterrizaje · ±25 m a ±500 m</div>
+
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+
+tl.fromTo('#s3-camA', { scale: 1, x: 0, y: 0 }, { scale: 1.2800, x: -268.8, y: -135.8, duration: 2.6, ease: 'power3.inOut' }, 0.05);
+tl.fromTo('#s3-c1', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, 0.4);
+tl.to('#s3-c1', { opacity: 0, duration: 0.2 }, 2.6);
+tl.fromTo('#s3-c1b', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, 0.8);
+tl.to('#s3-c1b', { opacity: 0, duration: 0.2 }, 2.6);
+tl.fromTo('#s3-camB', { opacity: 0, scale: 1.8000, x: -411.3, y: -973.8 }, { opacity: 1, scale: 2.0000, x: -457.0, y: -1082.0, duration: 0.7, ease: 'power3.out' }, 2.6);
+tl.fromTo('#s3-c3', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, 2.9);
+tl.fromTo('#s3-ringC', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)' }, 3.2);
+tl.fromTo('#s3-ringD', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)' }, 3.6);
+tl.fromTo('#s3-big', { opacity: 0, y: 40, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.5, ease: 'power4.out' }, 3.7);
+tl.fromTo('#s3-c2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, 3.95);
+
+window.__timelines["s3"] = tl;
+</script>
+</template>

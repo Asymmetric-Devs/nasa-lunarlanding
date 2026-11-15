@@ -1,6 +1,8 @@
 import { chromium } from 'playwright'
 import { mkdirSync } from 'node:fs'
-// usage: node capture.mjs <out dir> [url]   (STILLS_ONLY=1 skips the time-lapses)
+// usage: [SUNLINE_LANG=en|es] [STILLS_ONLY=1] node capture.mjs <out dir> [url]   (STILLS_ONLY=1 skips the time-lapses)
+const LANG = process.env.SUNLINE_LANG ?? 'en'
+const NAMES = { en: { compare: 'Compare', planner: 'Date planner' }, es: { compare: 'Comparar', planner: 'Planificador' } }[LANG]
 const OUT = process.argv[2]; mkdirSync(OUT, { recursive: true })
 const URL = process.argv[3] ?? 'http://localhost:4178/'
 const EXE = process.env.CHROME_BIN // path to a headless chromium; unset = Playwright's own
@@ -9,7 +11,7 @@ const errs = []
 async function open(dsf) {
   const ctx = await b.newContext({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: dsf })
   const p = await ctx.newPage(); p.on('pageerror', (e) => errs.push(e.message))
-  await p.addInitScript(() => { try { localStorage.setItem('sunline.lang', 'en'); localStorage.setItem('sunline.theme', 'dark'); localStorage.setItem('sunline.tour', '1') } catch {} })
+  await p.addInitScript((LANGX) => { try { localStorage.setItem('sunline.lang', LANGX); localStorage.setItem('sunline.theme', 'dark'); localStorage.setItem('sunline.tour', '1') } catch {} }, LANG)
   await p.goto(URL, { waitUntil: 'load' })
   await p.waitForSelector('.hud-top .slant:not([disabled])', { timeout: 60000 }); await p.waitForSelector('.pre', { state: 'detached', timeout: 30000 })
   await p.evaluate(() => document.querySelector('.hud-top .slant').click()); await p.waitForSelector('.intro', { state: 'detached' }); await p.waitForTimeout(1500)
@@ -46,13 +48,13 @@ if (!process.env.STILLS_ONLY) {
     await p.evaluate((n) => { for (const bt of document.querySelectorAll('.rail button')) { if (bt.textContent.trim() === '+' && bt.parentElement?.textContent.includes(n)) { bt.click(); return } } }, name)
     await p.waitForTimeout(500)
   }
-  await view(p, 'Compare'); await p.waitForTimeout(6000)
+  await view(p, NAMES.compare); await p.waitForTimeout(6000)
   await p.screenshot({ path: `${OUT}/compare_top.png` })
   await p.evaluate(() => { const c = document.querySelector('.page.compare'); c.scrollTop = c.scrollHeight }); await p.waitForTimeout(3000)
   await p.screenshot({ path: `${OUT}/compare_bottom.png` })
   await p.evaluate(() => { const s = document.querySelector('.sens'); s?.scrollIntoView({ block: 'center' }) }); await p.waitForTimeout(1500)
   await p.screenshot({ path: `${OUT}/compare_sens.png` })
-  await view(p, 'Date planner'); await p.waitForTimeout(6000); await p.screenshot({ path: `${OUT}/planner.png` })
+  await view(p, NAMES.planner); await p.waitForTimeout(6000); await p.screenshot({ path: `${OUT}/planner.png` })
   console.log('rail "+" count / scenarios on planner rows:', await p.$$eval('main *', (e) => e.length))
   await p.close()
 }

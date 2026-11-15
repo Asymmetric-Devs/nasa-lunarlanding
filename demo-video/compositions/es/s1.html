@@ -1,0 +1,86 @@
+<template>
+<style>
+
+@font-face{font-family:'Big Shoulders';src:url('assets/fonts/bigshoulders.woff2') format('woff2');font-weight:100 900}
+@font-face{font-family:'Geist';src:url('assets/fonts/geist.woff2') format('woff2');font-weight:100 900}
+@font-face{font-family:'Geist Mono';src:url('assets/fonts/geistmono.woff2') format('woff2');font-weight:100 900}
+
+#root{position:absolute;inset:0;overflow:hidden;background:#06080c;font-family:'Geist',sans-serif;color:#efece4}
+.cam{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.cam img{position:absolute;left:0;top:0;width:1920px;height:1080px}
+.chip{position:absolute;font:600 30px/1 'Geist Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:#efece4;background:#0b1015;border:2px solid #ffb547;padding:16px 24px 14px 24px;white-space:nowrap}
+.chip b{color:#ffb547;font-weight:700}
+.h1{position:absolute;font:800 132px/0.92 'Big Shoulders',sans-serif;text-transform:uppercase;letter-spacing:.005em;color:#efece4}
+.kick{position:absolute;font:600 32px/1 'Geist Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#ffb547}
+.scrim{position:absolute;inset:0}
+.bscrim{position:absolute;left:0;right:0;bottom:0;height:270px;background:linear-gradient(180deg,rgba(6,8,12,0) 0%,#06080c 42%)}
+
+</style>
+<div id="root" data-composition-id="s1" data-width="1920" data-height="1080">
+
+<div id="s1-cam" class="cam">
+<img id="s1-f0" src="assets/shots_es/horizon_00.png" style="opacity:1">
+<img id="s1-f1" src="assets/shots_es/horizon_01.png" style="opacity:0">
+<img id="s1-f2" src="assets/shots_es/horizon_02.png" style="opacity:0">
+<img id="s1-f3" src="assets/shots_es/horizon_03.png" style="opacity:0">
+<img id="s1-f4" src="assets/shots_es/horizon_04.png" style="opacity:0">
+<img id="s1-f5" src="assets/shots_es/horizon_05.png" style="opacity:0">
+<img id="s1-f6" src="assets/shots_es/horizon_06.png" style="opacity:0">
+<img id="s1-f7" src="assets/shots_es/horizon_07.png" style="opacity:0">
+<img id="s1-f8" src="assets/shots_es/horizon_08.png" style="opacity:0">
+<img id="s1-f9" src="assets/shots_es/horizon_09.png" style="opacity:0">
+<img id="s1-f10" src="assets/shots_es/horizon_10.png" style="opacity:0">
+<img id="s1-f11" src="assets/shots_es/horizon_11.png" style="opacity:0">
+<img id="s1-f12" src="assets/shots_es/horizon_12.png" style="opacity:0">
+<img id="s1-f13" src="assets/shots_es/horizon_13.png" style="opacity:0">
+<img id="s1-f14" src="assets/shots_es/horizon_14.png" style="opacity:0">
+<img id="s1-f15" src="assets/shots_es/horizon_15.png" style="opacity:0">
+<img id="s1-f16" src="assets/shots_es/horizon_16.png" style="opacity:0">
+<img id="s1-f17" src="assets/shots_es/horizon_17.png" style="opacity:0">
+<img id="s1-f18" src="assets/shots_es/horizon_18.png" style="opacity:0">
+<img id="s1-f19" src="assets/shots_es/horizon_19.png" style="opacity:0">
+<img id="s1-f20" src="assets/shots_es/horizon_20.png" style="opacity:0">
+<img id="s1-f21" src="assets/shots_es/horizon_21.png" style="opacity:0">
+<img id="s1-f22" src="assets/shots_es/horizon_22.png" style="opacity:0">
+<img id="s1-f23" src="assets/shots_es/horizon_23.png" style="opacity:0">
+</div>
+<div class="scrim" style="background:linear-gradient(90deg,rgba(6,8,12,.94) 0%,rgba(6,8,12,.78) 36%,rgba(6,8,12,0) 62%)"></div>
+<div id="s1-kick" class="kick" style="left:192px;top:150px">Polo sur lunar</div>
+<div id="s1-h1a" class="h1" style="left:192px;top:200px">Sombras<br>extremas</div>
+<div id="s1-h1b" class="h1" style="left:192px;top:490px;color:#5cb8ff">Apagones de<br>comunicación</div>
+
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+
+tl.fromTo('#s1-cam', { scale: 1.3671, x: -303.2, y: -375.9 }, { scale: 1.4765, x: -404.2, y: -449.2, duration: 5.5, ease: 'none' }, 0);
+tl.to('#s1-f1', { opacity: 1, duration: 0.191, ease: 'none' }, 0.362);
+tl.to('#s1-f2', { opacity: 1, duration: 0.191, ease: 'none' }, 0.575);
+tl.to('#s1-f3', { opacity: 1, duration: 0.191, ease: 'none' }, 0.787);
+tl.to('#s1-f4', { opacity: 1, duration: 0.191, ease: 'none' }, 1.000);
+tl.to('#s1-f5', { opacity: 1, duration: 0.191, ease: 'none' }, 1.212);
+tl.to('#s1-f6', { opacity: 1, duration: 0.191, ease: 'none' }, 1.425);
+tl.to('#s1-f7', { opacity: 1, duration: 0.191, ease: 'none' }, 1.637);
+tl.to('#s1-f8', { opacity: 1, duration: 0.191, ease: 'none' }, 1.850);
+tl.to('#s1-f9', { opacity: 1, duration: 0.191, ease: 'none' }, 2.062);
+tl.to('#s1-f10', { opacity: 1, duration: 0.191, ease: 'none' }, 2.275);
+tl.to('#s1-f11', { opacity: 1, duration: 0.191, ease: 'none' }, 2.487);
+tl.to('#s1-f12', { opacity: 1, duration: 0.191, ease: 'none' }, 2.700);
+tl.to('#s1-f13', { opacity: 1, duration: 0.191, ease: 'none' }, 2.912);
+tl.to('#s1-f14', { opacity: 1, duration: 0.191, ease: 'none' }, 3.125);
+tl.to('#s1-f15', { opacity: 1, duration: 0.191, ease: 'none' }, 3.337);
+tl.to('#s1-f16', { opacity: 1, duration: 0.191, ease: 'none' }, 3.550);
+tl.to('#s1-f17', { opacity: 1, duration: 0.191, ease: 'none' }, 3.762);
+tl.to('#s1-f18', { opacity: 1, duration: 0.191, ease: 'none' }, 3.975);
+tl.to('#s1-f19', { opacity: 1, duration: 0.191, ease: 'none' }, 4.188);
+tl.to('#s1-f20', { opacity: 1, duration: 0.191, ease: 'none' }, 4.400);
+tl.to('#s1-f21', { opacity: 1, duration: 0.191, ease: 'none' }, 4.612);
+tl.to('#s1-f22', { opacity: 1, duration: 0.191, ease: 'none' }, 4.825);
+tl.to('#s1-f23', { opacity: 1, duration: 0.191, ease: 'none' }, 5.038);
+tl.fromTo('#s1-kick', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' }, 0.25);
+tl.fromTo('#s1-h1a', { opacity: 0, y: 50, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.5, ease: 'power4.out' }, 0.45);
+tl.fromTo('#s1-h1b', { opacity: 0, y: 50, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.5, ease: 'power4.out' }, 1.5);
+
+window.__timelines["s1"] = tl;
+</script>
+</template>

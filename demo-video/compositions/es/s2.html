@@ -1,0 +1,98 @@
+<template>
+<style>
+
+@font-face{font-family:'Big Shoulders';src:url('assets/fonts/bigshoulders.woff2') format('woff2');font-weight:100 900}
+@font-face{font-family:'Geist';src:url('assets/fonts/geist.woff2') format('woff2');font-weight:100 900}
+@font-face{font-family:'Geist Mono';src:url('assets/fonts/geistmono.woff2') format('woff2');font-weight:100 900}
+
+#root{position:absolute;inset:0;overflow:hidden;background:#06080c;font-family:'Geist',sans-serif;color:#efece4}
+.cam{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.cam img{position:absolute;left:0;top:0;width:1920px;height:1080px}
+.chip{position:absolute;font:600 30px/1 'Geist Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:#efece4;background:#0b1015;border:2px solid #ffb547;padding:16px 24px 14px 24px;white-space:nowrap}
+.chip b{color:#ffb547;font-weight:700}
+.h1{position:absolute;font:800 132px/0.92 'Big Shoulders',sans-serif;text-transform:uppercase;letter-spacing:.005em;color:#efece4}
+.kick{position:absolute;font:600 32px/1 'Geist Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#ffb547}
+.scrim{position:absolute;inset:0}
+.bscrim{position:absolute;left:0;right:0;bottom:0;height:270px;background:linear-gradient(180deg,rgba(6,8,12,0) 0%,#06080c 42%)}
+
+</style>
+<div id="root" data-composition-id="s2" data-width="1920" data-height="1080">
+
+<div id="s2-cam" class="cam">
+<img id="s2-f0" src="assets/shots_es/polar_00.png" style="opacity:1">
+<img id="s2-f1" src="assets/shots_es/polar_01.png" style="opacity:0">
+<img id="s2-f2" src="assets/shots_es/polar_02.png" style="opacity:0">
+<img id="s2-f3" src="assets/shots_es/polar_03.png" style="opacity:0">
+<img id="s2-f4" src="assets/shots_es/polar_04.png" style="opacity:0">
+<img id="s2-f5" src="assets/shots_es/polar_05.png" style="opacity:0">
+<img id="s2-f6" src="assets/shots_es/polar_06.png" style="opacity:0">
+<img id="s2-f7" src="assets/shots_es/polar_07.png" style="opacity:0">
+<img id="s2-f8" src="assets/shots_es/polar_08.png" style="opacity:0">
+<img id="s2-f9" src="assets/shots_es/polar_09.png" style="opacity:0">
+<img id="s2-f10" src="assets/shots_es/polar_10.png" style="opacity:0">
+<img id="s2-f11" src="assets/shots_es/polar_11.png" style="opacity:0">
+<img id="s2-f12" src="assets/shots_es/polar_12.png" style="opacity:0">
+<img id="s2-f13" src="assets/shots_es/polar_13.png" style="opacity:0">
+<img id="s2-f14" src="assets/shots_es/polar_14.png" style="opacity:0">
+<img id="s2-f15" src="assets/shots_es/polar_15.png" style="opacity:0">
+<img id="s2-f16" src="assets/shots_es/polar_16.png" style="opacity:0">
+<img id="s2-f17" src="assets/shots_es/polar_17.png" style="opacity:0">
+<img id="s2-f18" src="assets/shots_es/polar_18.png" style="opacity:0">
+<img id="s2-f19" src="assets/shots_es/polar_19.png" style="opacity:0">
+<img id="s2-f20" src="assets/shots_es/polar_20.png" style="opacity:0">
+<img id="s2-f21" src="assets/shots_es/polar_21.png" style="opacity:0">
+<img id="s2-f22" src="assets/shots_es/polar_22.png" style="opacity:0">
+<img id="s2-f23" src="assets/shots_es/polar_23.png" style="opacity:0">
+<img id="s2-f24" src="assets/shots_es/polar_24.png" style="opacity:0">
+<img id="s2-f25" src="assets/shots_es/polar_25.png" style="opacity:0">
+<img id="s2-f26" src="assets/shots_es/polar_26.png" style="opacity:0">
+<img id="s2-f27" src="assets/shots_es/polar_27.png" style="opacity:0">
+<img id="s2-f28" src="assets/shots_es/polar_28.png" style="opacity:0">
+<img id="s2-f29" src="assets/shots_es/polar_29.png" style="opacity:0">
+</div>
+<div id="s2-c1" class="chip" style="left:192px;top:760px"><b>●</b> Todo en tu navegador</div>
+<div id="s2-c2" class="chip" style="left:192px;top:828px">Relieve LOLA · <b>80 m/px</b> · NASA LRO</div>
+<div id="s2-c3" class="chip" style="left:192px;top:896px">Estereográfica polar: <b>rho = 2R·tan((90° + lat) / 2)</b></div>
+
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+
+tl.fromTo('#s2-cam', { scale: 1, x: 0, y: 0 }, { scale: 1.5000, x: -426.0, y: -266.2, duration: 2.4, ease: 'power3.inOut' }, 0.1);
+tl.to('#s2-cam', { scale: 1.5900, x: -466.0, y: -286.2, duration: 3.0, ease: 'none' }, 2.5);
+tl.to('#s2-f1', { opacity: 1, duration: 0.147, ease: 'none' }, 0.263);
+tl.to('#s2-f2', { opacity: 1, duration: 0.147, ease: 'none' }, 0.427);
+tl.to('#s2-f3', { opacity: 1, duration: 0.147, ease: 'none' }, 0.590);
+tl.to('#s2-f4', { opacity: 1, duration: 0.147, ease: 'none' }, 0.753);
+tl.to('#s2-f5', { opacity: 1, duration: 0.147, ease: 'none' }, 0.917);
+tl.to('#s2-f6', { opacity: 1, duration: 0.147, ease: 'none' }, 1.080);
+tl.to('#s2-f7', { opacity: 1, duration: 0.147, ease: 'none' }, 1.243);
+tl.to('#s2-f8', { opacity: 1, duration: 0.147, ease: 'none' }, 1.407);
+tl.to('#s2-f9', { opacity: 1, duration: 0.147, ease: 'none' }, 1.570);
+tl.to('#s2-f10', { opacity: 1, duration: 0.147, ease: 'none' }, 1.733);
+tl.to('#s2-f11', { opacity: 1, duration: 0.147, ease: 'none' }, 1.897);
+tl.to('#s2-f12', { opacity: 1, duration: 0.147, ease: 'none' }, 2.060);
+tl.to('#s2-f13', { opacity: 1, duration: 0.147, ease: 'none' }, 2.223);
+tl.to('#s2-f14', { opacity: 1, duration: 0.147, ease: 'none' }, 2.387);
+tl.to('#s2-f15', { opacity: 1, duration: 0.147, ease: 'none' }, 2.550);
+tl.to('#s2-f16', { opacity: 1, duration: 0.147, ease: 'none' }, 2.713);
+tl.to('#s2-f17', { opacity: 1, duration: 0.147, ease: 'none' }, 2.877);
+tl.to('#s2-f18', { opacity: 1, duration: 0.147, ease: 'none' }, 3.040);
+tl.to('#s2-f19', { opacity: 1, duration: 0.147, ease: 'none' }, 3.203);
+tl.to('#s2-f20', { opacity: 1, duration: 0.147, ease: 'none' }, 3.367);
+tl.to('#s2-f21', { opacity: 1, duration: 0.147, ease: 'none' }, 3.530);
+tl.to('#s2-f22', { opacity: 1, duration: 0.147, ease: 'none' }, 3.693);
+tl.to('#s2-f23', { opacity: 1, duration: 0.147, ease: 'none' }, 3.857);
+tl.to('#s2-f24', { opacity: 1, duration: 0.147, ease: 'none' }, 4.020);
+tl.to('#s2-f25', { opacity: 1, duration: 0.147, ease: 'none' }, 4.183);
+tl.to('#s2-f26', { opacity: 1, duration: 0.147, ease: 'none' }, 4.347);
+tl.to('#s2-f27', { opacity: 1, duration: 0.147, ease: 'none' }, 4.510);
+tl.to('#s2-f28', { opacity: 1, duration: 0.147, ease: 'none' }, 4.673);
+tl.to('#s2-f29', { opacity: 1, duration: 0.147, ease: 'none' }, 4.837);
+tl.fromTo('#s2-c1', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, 1.5);
+tl.fromTo('#s2-c2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, 2.1);
+tl.fromTo('#s2-c3', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, 2.7);
+
+window.__timelines["s2"] = tl;
+</script>
+</template>

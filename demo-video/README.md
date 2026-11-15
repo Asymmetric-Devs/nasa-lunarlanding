@@ -52,3 +52,23 @@ Resultado: `renders/sunline-demo.mp4` (1920×1080, 30 fps, H.264 + AAC).
 - **r 0,98 Sol, r 0,99 Tierra, 300 puntos:** `npm run test:validation` (mapas LOLA `AVGVISIB_85S_060M`).
 - **"En milisegundos":** medido en Node, ~60 ms de horizonte más 1–5 ms de análisis por sitio. No se midió dentro del navegador.
 - **Voz sintética** (Kokoro) y música generada: si el concurso pide declararlo, hay que decirlo.
+
+## Versión en español (para el equipo)
+
+Misma estructura, otro guion: voz femenina (Kokoro `ef_dora`, velocidad 1,05), interfaz de la app en español y más foco en la teoría (proyección estereográfica polar, trazado de rayos sobre 360 acimuts, modelo lunar IAU con libración y paralaje, validación). Dura 29,1 s.
+
+```
+SUNLINE_LANG=es node scripts/capture.mjs assets/shots_es http://localhost:4178/   # capturas en español
+python3 scripts/build_film.py es                                                   # variants/index.es.html + compositions/es/
+npx hyperframes render -c variants/index.es.html --quality delivery -o renders/sunline-demo-es.mp4
+```
+
+El raíz en español vive en `variants/` porque un segundo `index*.html` en la raíz hace fallar `hyperframes check`. Voz (una pasada por línea, `-v ef_dora -s 1.05`, salida `assets/voice_es/voN.wav`):
+
+1. En el polo sur de la Luna, unos metros cambian la luz y la señal.
+2. Lo calculamos en tu navegador: relieve láser de LOLA y proyección estereográfica polar.
+3. Con trazado de rayos en trescientos sesenta direcciones, dibujamos el horizonte exacto de cada sitio.
+4. Ubicamos al Sol y a la Tierra con el modelo lunar de la IAU y su libración.
+5. Validado contra JPL Horizons, con menos de cinco milésimas de grado de error. Sunline: misiones más seguras.
+
+Las fórmulas en pantalla son las del código: `rho = 2R·tan((90° + lat) / 2)` (proyección en `src/engine/terrain.ts`) y `elev = atan2(r1·cos(th) - r0, r1·sin(th))` (horizonte esférico exacto, `elevationTo`).
