@@ -23,8 +23,8 @@ function Inner({ res, now, tMs }: { res: Result; now: Sample; tMs: number }) {
   const cv = useRef<HTMLCanvasElement>(null), ov = useRef<HTMLCanvasElement>(null), wrap = useRef<HTMLDivElement>(null)
   const gl = useRef<TerrainGL | null>(null)
   const raf = useRef(0), lastF = useRef(0)
-  // coalesce renders to one per animation frame; adapt resolution to the GPU's real speed
-  const schedule = () => { if (raf.current) return; raf.current = requestAnimationFrame((n) => { raf.current = 0; const g = gl.current; if (!g) return; if (lastF.current && n - lastF.current < 120) g.adapt(n - lastF.current); lastF.current = n; g.render() }) }
+  // coalesce renders to one per animation frame; adapt cost to the GPU's real speed
+  const schedule = () => { if (raf.current) return; raf.current = requestAnimationFrame((n) => { raf.current = 0; const g = gl.current; if (!g) return; if (lastF.current && n - lastF.current < 500) g.adapt(n - lastF.current); lastF.current = n; g.render() }) }
   const [size, setSize] = useState({ w: 800, h: 450 })
   const [radius, setRadius] = useState(sc.lat < -86 ? 18 : 40)
   const [tilt, setTilt] = useState(0)
