@@ -3,3 +3,7 @@ dist
 data-raw
 .DS_Store
 .engram/
+
+# demo video: the rendered MP4 and the tool caches are outputs, not sources
+demo-video/renders/
+demo-video/.hyperframes/

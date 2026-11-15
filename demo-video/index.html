@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box }
+html, body { width:1920px; height:1080px; overflow:hidden; background:#06080c }
+#root { position:absolute; inset:0; background:#06080c; overflow:hidden }
+.wipe { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:50 }
+.wipe i { position:absolute; top:-10%; left:0; width:100%; height:120%; background:#ffb547; transform:skewX(-14deg) }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="28.9" data-width="1920" data-height="1080">
+<div id="s1" class="clip" data-composition-id="s1" data-composition-src="compositions/s1.html" data-start="0.0" data-duration="5.5" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+<div id="s2" class="clip" data-composition-id="s2" data-composition-src="compositions/s2.html" data-start="5.4" data-duration="5.5" data-track-index="2" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+<div id="s3" class="clip" data-composition-id="s3" data-composition-src="compositions/s3.html" data-start="10.8" data-duration="6.0" data-track-index="3" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+<div id="s4" class="clip" data-composition-id="s4" data-composition-src="compositions/s4.html" data-start="16.7" data-duration="5.6" data-track-index="4" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+<div id="s5" class="clip" data-composition-id="s5" data-composition-src="compositions/s5.html" data-start="22.2" data-duration="6.7" data-track-index="5" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+<div id="wipe0" class="clip wipe" data-start="5.35" data-duration="0.6" data-track-index="41"><i></i></div>
+<div id="wipe1" class="clip wipe" data-start="10.75" data-duration="0.6" data-track-index="42"><i></i></div>
+<div id="wipe2" class="clip wipe" data-start="16.65" data-duration="0.6" data-track-index="43"><i></i></div>
+<div id="wipe3" class="clip wipe" data-start="22.15" data-duration="0.6" data-track-index="44"><i></i></div>
+<audio id="vo1" class="clip" src="assets/voice/vo1.wav" data-start="0.45" data-duration="5.01" data-track-index="10" data-volume="2.4"></audio>
+<audio id="vo2" class="clip" src="assets/voice/vo2.wav" data-start="5.65" data-duration="5.23" data-track-index="11" data-volume="2.4"></audio>
+<audio id="vo3" class="clip" src="assets/voice/vo3.wav" data-start="11.05" data-duration="5.67" data-track-index="12" data-volume="2.4"></audio>
+<audio id="vo4" class="clip" src="assets/voice/vo4.wav" data-start="16.95" data-duration="3.01" data-track-index="13" data-volume="2.4"></audio>
+<audio id="vo5" class="clip" src="assets/voice/vo5.wav" data-start="22.55" data-duration="5.67" data-track-index="14" data-volume="2.4"></audio>
+<audio id="music" class="clip" src="assets/music/bed.wav" data-start="0" data-duration="28.9" data-track-index="20" data-volume="0.3"></audio>
+<audio id="sfx-hit" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="0.0" data-duration="1.5" data-track-index="30" data-volume="0.9"></audio>
+<audio id="sfx-w1" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="5.3" data-duration="0.57" data-track-index="31" data-volume="1.4"></audio>
+<audio id="sfx-w2" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="10.7" data-duration="0.57" data-track-index="32" data-volume="1.4"></audio>
+<audio id="sfx-w3" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="16.6" data-duration="0.57" data-track-index="33" data-volume="1.4"></audio>
+<audio id="sfx-w4" class="clip" src="assets/sfx/whoosh-cinematic.mp3" data-start="22.0" data-duration="1.6" data-track-index="34" data-volume="1.0"></audio>
+<audio id="sfx-c1" class="clip" src="assets/sfx/click-soft.mp3" data-start="14.0" data-duration="0.37" data-track-index="35" data-volume="1.2"></audio>
+<audio id="sfx-c2" class="clip" src="assets/sfx/click-soft.mp3" data-start="14.4" data-duration="0.37" data-track-index="36" data-volume="1.2"></audio>
+<audio id="sfx-sw" class="clip" src="assets/sfx/riser.mp3" data-start="18.1" data-duration="2.0" data-track-index="37" data-volume="0.5"></audio>
+<audio id="sfx-ch" class="clip" src="assets/sfx/chime.mp3" data-start="22.95" data-duration="2.0" data-track-index="38" data-volume="0.9"></audio>
+<audio id="sfx-sp" class="clip" src="assets/sfx/sparkle.mp3" data-start="25.6" data-duration="1.5" data-track-index="39" data-volume="0.8"></audio>
+</div>
+<script>
+const rl = gsap.timeline({ paused: true });
+rl.fromTo('#wipe0 i', { xPercent: -110 }, { xPercent: 110, duration: 0.5, ease: 'power3.inOut' }, 5.38);
+rl.fromTo('#wipe1 i', { xPercent: -110 }, { xPercent: 110, duration: 0.5, ease: 'power3.inOut' }, 10.78);
+rl.fromTo('#wipe2 i', { xPercent: -110 }, { xPercent: 110, duration: 0.5, ease: 'power3.inOut' }, 16.68);
+rl.fromTo('#wipe3 i', { xPercent: -110 }, { xPercent: 110, duration: 0.5, ease: 'power3.inOut' }, 22.18);
+window.__timelines["main"] = rl;
+</script>
+</body>
+</html>
